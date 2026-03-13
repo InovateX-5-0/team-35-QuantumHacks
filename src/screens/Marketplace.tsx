@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 import { Search, ShoppingBag, Filter, Star, Heart, ChevronRight, ShoppingCart, Plus, Minus, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -46,9 +47,11 @@ const MOCK_PRODUCTS = [
 ];
 
 const Marketplace: React.FC = () => {
+  const { addOrder, user } = useApp();
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [cartCount, setCartCount] = useState(0);
+  const [isOrdering, setIsOrdering] = useState(false);
 
   const categories = ['All', 'Food', 'Toys', 'Accessories', 'Health'];
 
@@ -180,14 +183,32 @@ const Marketplace: React.FC = () => {
                     <button className="p-2 text-slate-600"><Plus size={18} /></button>
                   </div>
                   <button 
-                    onClick={() => {
-                      setCartCount(prev => prev + 1);
-                      setSelectedProduct(null);
-                      alert('Added to cart!');
+                    disabled={isOrdering}
+                    onClick={async () => {
+                      setIsOrdering(true);
+                      try {
+                        await addOrder({
+                          customerName: user?.name || 'Anonymous User',
+                          items: [{
+                            name: selectedProduct.name,
+                            quantity: 1,
+                            price: selectedProduct.price
+                          }],
+                          total: selectedProduct.price,
+                          status: 'processing',
+                          date: new Date().toISOString().split('T')[0]
+                        });
+                        setCartCount(prev => prev + 1);
+                        setSelectedProduct(null);
+                      } catch (error) {
+                        console.error(error);
+                      } finally {
+                        setIsOrdering(false);
+                      }
                     }}
                     className="flex-1 btn-primary"
                   >
-                    Add to Cart
+                    {isOrdering ? 'Processing...' : 'Buy Now'}
                   </button>
                 </div>
               </div>

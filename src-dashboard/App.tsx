@@ -1,71 +1,93 @@
-import React, { useState } from 'react';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
-import { RoleSelector } from './components/RoleSelector';
-import { VeterinaryOverview } from './pages/veterinary/Overview';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { RoleProvider, useRole } from './context/RoleContext';
+import { ToastProvider } from './context/ToastContext';
+import { DashboardLayout } from './components/layout/DashboardLayout';
+import { RoleSelector } from './pages/RoleSelector';
 
-type Role = 'veterinary' | 'shelter' | 'store';
-type Page = 'overview' | 'appointments' | 'patients' | 'staff' | 'settings' | 'animals' | 'adoptions' | 'medical' | 'reports' | 'inventory' | 'orders' | 'analytics';
+// Vet Pages
+import { VetOverview } from './pages/vet/VetOverview';
+import { Appointments } from './pages/vet/Appointments';
+import { PatientRecords } from './pages/vet/PatientRecords';
 
-const App: React.FC = () => {
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [currentPage, setCurrentPage] = useState<Page>('overview');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+// Shelter Pages
+import { ShelterOverview } from './pages/shelter/ShelterOverview';
+import { AnimalListings } from './pages/shelter/AnimalListings';
+import { AdoptionApplications } from './pages/shelter/AdoptionApplications';
 
-  if (!selectedRole) {
-    return <RoleSelector onSelectRole={setSelectedRole} />;
+// Store Pages
+import { StoreOverview } from './pages/store/StoreOverview';
+import { Inventory } from './pages/store/Inventory';
+import { Orders } from './pages/store/Orders';
+
+// Placeholder Pages
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
+    <h1 className="text-2xl font-bold text-slate-800 mb-2">{title}</h1>
+    <p className="text-slate-500">This module is under construction.</p>
+  </div>
+);
+
+function AppContent() {
+  const { role } = useRole();
+
+  if (!role) {
+    return <RoleSelector />;
   }
 
-  const handleRoleChange = () => {
-    setSelectedRole(null);
-    setCurrentPage('overview');
-  };
-
-  const renderContent = () => {
-    // For now, show overview for all roles (you can expand this)
-    switch (currentPage) {
-      case 'overview':
-        if (selectedRole === 'veterinary') {
-          return <VeterinaryOverview />;
-        }
-        return (
-          <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4 capitalize">{selectedRole} Overview</h2>
-            <p className="text-gray-600">This page is under construction. Check back soon!</p>
-            <div className="mt-8 text-6xl">🚧</div>
-          </div>
-        );
-      default:
-        return (
-          <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4 capitalize">{currentPage}</h2>
-            <p className="text-gray-600">This feature will be implemented soon.</p>
-            <div className="mt-8 text-6xl">🔨</div>
-          </div>
-        );
-    }
-  };
-
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar
-        role={selectedRole}
-        currentPage={currentPage}
-        onNavigate={setCurrentPage}
-        collapsed={sidebarCollapsed}
-      />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header role={selectedRole} onRoleChange={handleRoleChange} />
+    <DashboardLayout>
+      <Routes>
+        <Route path="/" element={<Navigate to="/overview" replace />} />
         
-        <main className="flex-1 overflow-y-auto p-6">
-          {renderContent()}
-        </main>
-      </div>
-    </div>
+        {/* Vet Routes */}
+        {role === 'vet' && (
+          <>
+            <Route path="/overview" element={<VetOverview />} />
+            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/patients" element={<PatientRecords />} />
+            <Route path="/schedule" element={<PlaceholderPage title="Staff Schedule" />} />
+            <Route path="/settings" element={<PlaceholderPage title="Clinic Settings" />} />
+          </>
+        )}
+
+        {/* Shelter Routes */}
+        {role === 'shelter' && (
+          <>
+            <Route path="/overview" element={<ShelterOverview />} />
+            <Route path="/listings" element={<AnimalListings />} />
+            <Route path="/adoptions" element={<AdoptionApplications />} />
+            <Route path="/medical" element={<PlaceholderPage title="Medical Records" />} />
+            <Route path="/reports" element={<PlaceholderPage title="Shelter Reports" />} />
+          </>
+        )}
+
+        {/* Store Routes */}
+        {role === 'store' && (
+          <>
+            <Route path="/overview" element={<StoreOverview />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/analytics" element={<PlaceholderPage title="Store Analytics" />} />
+          </>
+        )}
+
+        <Route path="*" element={<Navigate to="/overview" replace />} />
+      </Routes>
+    </DashboardLayout>
   );
-};
+}
+
+function App() {
+  return (
+    <RoleProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ToastProvider>
+    </RoleProvider>
+  );
+}
 
 export default App;

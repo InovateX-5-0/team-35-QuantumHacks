@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 import { MOCK_ADOPTION_PETS } from '../data/mockData';
 import { Heart, Filter, Search, MapPin, Info, ChevronRight, X, CheckCircle2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,9 +7,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Adoption: React.FC = () => {
   const navigate = useNavigate();
+  const { addAdoptionApplication, user } = useApp();
   const [selectedPet, setSelectedPet] = useState<any>(null);
   const [filter, setFilter] = useState('All');
   const [isApplying, setIsApplying] = useState(false);
+  const [formData, setFormData] = useState({
+    experience: 'First-time owner',
+    homeType: 'Apartment',
+    message: ''
+  });
 
   const categories = ['All', 'Dogs', 'Cats', 'Birds', 'Small Pets'];
   
@@ -16,14 +23,30 @@ const Adoption: React.FC = () => {
     ? MOCK_ADOPTION_PETS 
     : MOCK_ADOPTION_PETS.filter(p => p.species === filter.slice(0, -1));
 
-  const handleApply = (e: React.FormEvent) => {
+  const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedPet) return;
+    
     setIsApplying(true);
-    setTimeout(() => {
+    try {
+      await addAdoptionApplication({
+        petId: selectedPet.id,
+        petName: selectedPet.name,
+        shelterId: selectedPet.id, // Mocking shelter ID as pet ID for now
+        shelterName: selectedPet.shelter,
+        applicantName: user?.name || 'Anonymous User',
+        date: new Date().toISOString().split('T')[0],
+        status: 'pending',
+        homeType: formData.homeType,
+        experience: formData.experience,
+        message: formData.message
+      });
       setIsApplying(false);
       setSelectedPet(null);
-      alert('Application submitted! The shelter will contact you soon.');
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsApplying(false);
+    }
   };
 
   return (
@@ -232,7 +255,11 @@ const Adoption: React.FC = () => {
               <form onSubmit={handleApply} className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Experience with Pets</label>
-                  <select className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm">
+                  <select 
+                    className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm"
+                    value={formData.experience}
+                    onChange={(e) => setFormData({ ...formData, experience: (e.target as HTMLSelectElement).value })}
+                  >
                     <option>First-time owner</option>
                     <option>Experienced owner</option>
                     <option>Professional handler</option>
@@ -240,7 +267,11 @@ const Adoption: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Home Environment</label>
-                  <select className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm">
+                  <select 
+                    className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm"
+                    value={formData.homeType}
+                    onChange={(e) => setFormData({ ...formData, homeType: (e.target as HTMLSelectElement).value })}
+                  >
                     <option>Apartment</option>
                     <option>House with yard</option>
                     <option>Farm/Rural</option>
@@ -251,6 +282,8 @@ const Adoption: React.FC = () => {
                   <textarea 
                     className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm h-24 resize-none"
                     placeholder="Tell us about your home..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: (e.target as HTMLTextAreaElement).value })}
                   />
                 </div>
                 <div className="flex gap-3 mt-6">

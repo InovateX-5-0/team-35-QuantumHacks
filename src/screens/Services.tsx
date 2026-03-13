@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 import { Scissors, Footprints, GraduationCap, Calendar, Star, MapPin, ChevronRight, X, Clock, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,6 +40,7 @@ const MOCK_SERVICES = [
 ];
 
 const Services: React.FC = () => {
+  const { addAppointment, user, pets } = useApp();
   const [selectedService, setSelectedService] = useState<any>(null);
   const [isBooking, setIsBooking] = useState(false);
 
@@ -154,16 +156,38 @@ const Services: React.FC = () => {
                   We provide top-tier care for your beloved pets. Our experienced team ensures a safe, comfortable, and enjoyable experience for every animal.
                 </p>
 
-                <button 
-                  onClick={() => {
-                    alert('Booking request sent!');
-                    setSelectedService(null);
-                  }}
-                  className="w-full btn-primary h-16 text-lg"
-                >
-                  <Calendar size={24} />
-                  Book Now
-                </button>
+                  <button 
+                    disabled={isBooking}
+                    onClick={async () => {
+                      if (!pets.length) {
+                        alert('Please add a pet first!');
+                        return;
+                      }
+                      setIsBooking(true);
+                      try {
+                        await addAppointment({
+                          petId: pets[0].id,
+                          petName: pets[0].name,
+                          ownerName: user?.name || 'Anonymous User',
+                          clinicName: selectedService.provider,
+                          date: new Date().toISOString().split('T')[0],
+                          time: '10:00 AM',
+                          notes: 'Booked via mobile app',
+                          status: 'pending',
+                          type: 'Checkup' // Defaulting to Checkup for the demo
+                        });
+                        setSelectedService(null);
+                      } catch (error) {
+                        console.error(error);
+                      } finally {
+                        setIsBooking(false);
+                      }
+                    }}
+                    className="w-full btn-primary h-16 text-lg"
+                  >
+                    <Calendar size={24} />
+                    {isBooking ? 'Booking...' : 'Book Now'}
+                  </button>
               </div>
             </motion.div>
           </motion.div>

@@ -1,182 +1,125 @@
-// Mock Data for PawCare Dashboard
-
-export interface Appointment {
-  id: string;
-  petName: string;
-  owner: string;
-  date: string;
-  time: string;
-  type: 'checkup' | 'surgery' | 'vaccine' | 'emergency';
-  status: 'confirmed' | 'pending' | 'cancelled';
-}
-
-export interface Patient {
-  id: string;
-  name: string;
-  species: string;
-  breed: string;
-  age: number;
-  owner: string;
-  vaccinationHistory: string[];
-  visitHistory: { date: string; reason: string }[];
-  notes: string;
-}
-
-export interface StaffMember {
-  id: string;
-  name: string;
-  role: string;
-  availability: boolean[];
-}
-
-export interface ShelterAnimal {
-  id: string;
-  name: string;
-  species: string;
-  breed: string;
-  age: number;
-  status: 'available' | 'adopted' | 'medical hold';
-  photo: string;
-  arrivalDate: string;
-  medicalRecords: string[];
-}
-
-export interface AdoptionApplication {
-  id: string;
-  applicantName: string;
-  petId: string;
-  petName: string;
-  date: string;
-  status: 'pending' | 'approved' | 'rejected';
-  contact: string;
-  address: string;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  category: 'food' | 'medicine' | 'accessory' | 'toy';
-  stockCount: number;
-  reorderLevel: number;
-  price: number;
-  sold: number;
-}
-
-export interface Order {
-  id: string;
-  customer: string;
-  items: { productId: string; quantity: number }[];
-  total: number;
-  status: 'processing' | 'shipped' | 'delivered';
-  date: string;
-}
-
-// Veterinary Clinic Data
-export const veterinaryAppointments: Appointment[] = [
-  { id: '1', petName: 'Max', owner: 'John Smith', date: '2024-01-15', time: '09:00', type: 'checkup', status: 'confirmed' },
-  { id: '2', petName: 'Bella', owner: 'Sarah Johnson', date: '2024-01-15', time: '10:30', type: 'vaccine', status: 'confirmed' },
-  { id: '3', petName: 'Charlie', owner: 'Mike Brown', date: '2024-01-15', time: '14:00', type: 'surgery', status: 'pending' },
-  { id: '4', petName: 'Luna', owner: 'Emma Wilson', date: '2024-01-16', time: '11:00', type: 'checkup', status: 'confirmed' },
-  { id: '5', petName: 'Cooper', owner: 'David Lee', date: '2024-01-16', time: '15:30', type: 'emergency', status: 'cancelled' },
-  { id: '6', petName: 'Daisy', owner: 'Lisa Anderson', date: '2024-01-17', time: '09:30', type: 'vaccine', status: 'confirmed' },
-];
-
-export const patientRecords: Patient[] = [
-  { id: '1', name: 'Max', species: 'Dog', breed: 'Golden Retriever', age: 5, owner: 'John Smith', 
-    vaccinationHistory: ['Rabies (2023)', 'DHPP (2023)', 'Bordetella (2024)'],
-    visitHistory: [{ date: '2024-01-10', reason: 'Annual Checkup' }, { date: '2023-06-15', reason: 'Vaccination' }],
-    notes: 'Healthy, regular exercise recommended' },
-  { id: '2', name: 'Bella', species: 'Cat', breed: 'Siamese', age: 3, owner: 'Sarah Johnson',
-    vaccinationHistory: ['Rabies (2023)', 'FVRCP (2023)'],
-    visitHistory: [{ date: '2024-01-08', reason: 'Dental Cleaning' }],
-    notes: 'Indoor cat, special diet' },
-  { id: '3', name: 'Charlie', species: 'Dog', breed: 'German Shepherd', age: 7, owner: 'Mike Brown',
-    vaccinationHistory: ['Rabies (2023)', 'DHPP (2023)', 'Lyme (2023)'],
-    visitHistory: [{ date: '2024-01-05', reason: 'Hip Evaluation' }, { date: '2023-11-20', reason: 'Blood Work' }],
-    notes: 'Hip dysplasia monitoring required' },
-];
-
-export const staffSchedule: StaffMember[] = [
-  { id: '1', name: 'Dr. Emily Chen', role: 'Senior Veterinarian', availability: [true, true, true, true, true, false, false] },
-  { id: '2', name: 'Dr. James Wilson', role: 'Veterinarian', availability: [true, true, false, true, true, false, false] },
-  { id: '3', name: 'Dr. Maria Garcia', role: 'Surgical Specialist', availability: [false, true, true, true, false, false, false] },
-];
-
-// Shelter Data
-export const shelterAnimals: ShelterAnimal[] = [
-  { id: '1', name: 'Rocky', species: 'Dog', breed: 'Labrador Mix', age: 2, status: 'available', 
-    photo: '🐕', arrivalDate: '2024-01-01', medicalRecords: ['Vaccinated', 'Neutered', 'Microchipped'] },
-  { id: '2', name: 'Whiskers', species: 'Cat', breed: 'Domestic Shorthair', age: 1, status: 'available',
-    photo: '🐱', arrivalDate: '2024-01-05', medicalRecords: ['Vaccinated', 'Spayed'] },
-  { id: '3', name: 'Buddy', species: 'Dog', breed: 'Beagle', age: 5, status: 'medical hold',
-    photo: '🐕', arrivalDate: '2023-12-15', medicalRecords: ['Under treatment for ear infection'] },
-  { id: '4', name: 'Mittens', species: 'Cat', breed: 'Persian', age: 3, status: 'adopted',
-    photo: '🐱', arrivalDate: '2023-11-20', medicalRecords: ['Vaccinated', 'Spayed', 'Dental Work'] },
-];
-
-export const adoptionApplications: AdoptionApplication[] = [
-  { id: '1', applicantName: 'Jennifer Martinez', petId: '1', petName: 'Rocky', date: '2024-01-10', status: 'pending', contact: '555-0101', address: '123 Main St' },
-  { id: '2', applicantName: 'Robert Taylor', petId: '2', petName: 'Whiskers', date: '2024-01-12', status: 'approved', contact: '555-0102', address: '456 Oak Ave' },
-  { id: '3', applicantName: 'Amanda White', petId: '4', petName: 'Mittens', date: '2024-01-08', status: 'approved', contact: '555-0103', address: '789 Pine Rd' },
-];
-
-// Pet Store Data
-export const products: Product[] = [
-  { id: '1', name: 'Premium Dog Food', category: 'food', stockCount: 45, reorderLevel: 20, price: 54.99, sold: 234 },
-  { id: '2', name: 'Cat Litter', category: 'accessory', stockCount: 8, reorderLevel: 15, price: 12.99, sold: 456 },
-  { id: '3', name: 'Heartworm Medication', category: 'medicine', stockCount: 120, reorderLevel: 30, price: 89.99, sold: 189 },
-  { id: '4', name: 'Rope Toy', category: 'toy', stockCount: 5, reorderLevel: 10, price: 8.99, sold: 312 },
-  { id: '5', name: 'Bird Seed Mix', category: 'food', stockCount: 67, reorderLevel: 25, price: 15.99, sold: 145 },
-  { id: '6', name: 'Fish Tank Filter', category: 'accessory', stockCount: 23, reorderLevel: 10, price: 34.99, sold: 78 },
-];
-
-export const orders: Order[] = [
-  { id: 'ORD-001', customer: 'Alice Johnson', items: [{ productId: '1', quantity: 2 }], total: 109.98, status: 'delivered', date: '2024-01-10' },
-  { id: 'ORD-002', customer: 'Bob Smith', items: [{ productId: '3', quantity: 1 }, { productId: '4', quantity: 3 }], total: 116.96, status: 'shipped', date: '2024-01-12' },
-  { id: 'ORD-003', customer: 'Carol White', items: [{ productId: '2', quantity: 4 }], total: 51.96, status: 'processing', date: '2024-01-14' },
-];
-
-// Analytics Data
-export const appointmentVolumeData = [
-  { date: 'Jan 1', appointments: 12 }, { date: 'Jan 5', appointments: 15 },
-  { date: 'Jan 10', appointments: 18 }, { date: 'Jan 15', appointments: 14 },
-  { date: 'Jan 20', appointments: 20 }, { date: 'Jan 25', appointments: 17 },
-  { date: 'Jan 30', appointments: 22 },
-];
-
-export const appointmentTypeBreakdown = [
-  { name: 'Checkup', value: 45 }, { name: 'Vaccine', value: 30 },
-  { name: 'Surgery', value: 15 }, { name: 'Emergency', value: 10 },
-];
-
-export const topBreeds = [
-  { breed: 'Labrador', count: 45 }, { breed: 'Golden Retriever', count: 38 },
-  { breed: 'German Shepherd', count: 32 }, { breed: 'Siamese Cat', count: 28 },
-  { breed: 'Beagle', count: 25 },
-];
-
-export const adoptionRateData = [
-  { month: 'Aug', adoptions: 12 }, { month: 'Sep', adoptions: 15 },
-  { month: 'Oct', adoptions: 18 }, { month: 'Nov', adoptions: 22 },
-  { month: 'Dec', adoptions: 25 }, { month: 'Jan', adoptions: 20 },
-];
-
-export const speciesBreakdown = [
-  { name: 'Dogs', value: 45 }, { name: 'Cats', value: 35 },
-  { name: 'Rabbits', value: 12 }, { name: 'Birds', value: 8 },
-];
-
-export const revenueByCategory = [
-  { month: 'Aug', food: 4000, medicine: 2400, accessory: 1800 },
-  { month: 'Sep', food: 4500, medicine: 2800, accessory: 2100 },
-  { month: 'Oct', food: 5200, medicine: 3100, accessory: 2400 },
-  { month: 'Nov', food: 4800, medicine: 2900, accessory: 2200 },
-  { month: 'Dec', food: 5500, medicine: 3400, accessory: 2600 },
-  { month: 'Jan', food: 6000, medicine: 3700, accessory: 2900 },
-];
-
-export const topSellingProducts = [
-  { name: 'Premium Dog Food', sales: 234 }, { name: 'Cat Litter', sales: 456 },
-  { name: 'Rope Toy', sales: 312 }, { name: 'Heartworm Meds', sales: 189 },
-  { name: 'Bird Seed', sales: 145 },
-];
+export const mockData = {
+  vet: {
+    stats: {
+      todayAppointments: 24,
+      newPatients: 12,
+      revenueToday: 3240,
+      activeVets: 4,
+    },
+    appointmentVolume: [
+      { date: 'Mon', count: 18 },
+      { date: 'Tue', count: 22 },
+      { date: 'Wed', count: 19 },
+      { date: 'Thu', count: 24 },
+      { date: 'Fri', count: 28 },
+      { date: 'Sat', count: 35 },
+      { date: 'Sun', count: 15 },
+    ],
+    appointmentTypes: [
+      { name: 'Checkup', value: 45 },
+      { name: 'Vaccination', value: 30 },
+      { name: 'Surgery', value: 15 },
+      { name: 'Emergency', value: 10 },
+    ],
+    topBreeds: [
+      { name: 'Golden Retriever', count: 120 },
+      { name: 'French Bulldog', count: 95 },
+      { name: 'Labrador', count: 88 },
+      { name: 'Persian Cat', count: 75 },
+      { name: 'German Shepherd', count: 62 },
+    ],
+    appointments: [
+      { id: '1', petName: 'Bella', owner: 'Sarah Jones', time: '09:00 AM', type: 'Checkup', status: 'confirmed' },
+      { id: '2', petName: 'Max', owner: 'Mike Smith', time: '09:30 AM', type: 'Vaccination', status: 'pending' },
+      { id: '3', petName: 'Luna', owner: 'Emma Wilson', time: '10:00 AM', type: 'Surgery', status: 'confirmed' },
+      { id: '4', petName: 'Charlie', owner: 'Tom Davis', time: '11:00 AM', type: 'Checkup', status: 'cancelled' },
+      { id: '5', petName: 'Lucy', owner: 'Lisa Taylor', time: '01:00 PM', type: 'Emergency', status: 'confirmed' },
+    ],
+    patients: [
+      { id: 'P001', name: 'Bella', species: 'Dog', breed: 'Golden Retriever', age: '3 yrs', lastVisit: '2023-10-15' },
+      { id: 'P002', name: 'Max', species: 'Dog', breed: 'German Shepherd', age: '5 yrs', lastVisit: '2023-11-20' },
+      { id: 'P003', name: 'Luna', species: 'Cat', breed: 'Persian', age: '2 yrs', lastVisit: '2024-01-05' },
+      { id: 'P004', name: 'Charlie', species: 'Dog', breed: 'Labrador', age: '1 yr', lastVisit: '2024-02-12' },
+      { id: 'P005', name: 'Lucy', species: 'Cat', breed: 'Siamese', age: '4 yrs', lastVisit: '2023-09-30' },
+    ]
+  },
+  shelter: {
+    stats: {
+      totalAnimals: 145,
+      adoptedThisMonth: 32,
+      pendingApplications: 18,
+      newArrivals: 8,
+    },
+    adoptionRate: [
+      { month: 'Jan', count: 25 },
+      { month: 'Feb', count: 28 },
+      { month: 'Mar', count: 35 },
+      { month: 'Apr', count: 32 },
+      { month: 'May', count: 42 },
+      { month: 'Jun', count: 48 },
+    ],
+    speciesBreakdown: [
+      { name: 'Dogs', value: 85 },
+      { name: 'Cats', value: 45 },
+      { name: 'Birds', value: 10 },
+      { name: 'Others', value: 5 },
+    ],
+    agestats: [
+      { age: '< 1 yr', count: 45 },
+      { age: '1-3 yrs', count: 65 },
+      { age: '3-7 yrs', count: 25 },
+      { age: '7+ yrs', count: 10 },
+    ],
+    animals: [
+      { id: 'A001', name: 'Buddy', species: 'Dog', breed: 'Mixed', age: '2 yrs', status: 'available' },
+      { id: 'A002', name: 'Mittens', species: 'Cat', breed: 'Domestic Shorthair', age: '1 yr', status: 'pending' },
+      { id: 'A003', name: 'Rocky', species: 'Dog', breed: 'Bulldog', age: '4 yrs', status: 'medical_hold' },
+      { id: 'A004', name: 'Daisy', species: 'Dog', breed: 'Poodle', age: '3 mos', status: 'adopted' },
+      { id: 'A005', name: 'Oliver', species: 'Cat', breed: 'Maine Coon', age: '5 yrs', status: 'available' },
+    ],
+    applications: [
+      { id: 'APP-101', applicant: 'John Doe', pet: 'Buddy (A001)', date: '2024-03-12', status: 'pending' },
+      { id: 'APP-102', applicant: 'Jane Smith', pet: 'Mittens (A002)', date: '2024-03-10', status: 'approved' },
+      { id: 'APP-103', applicant: 'Robert Johnson', pet: 'Daisy (A004)', date: '2024-03-05', status: 'approved' },
+      { id: 'APP-104', applicant: 'Emily White', pet: 'Oliver (A005)', date: '2024-03-14', status: 'rejected' },
+    ]
+  },
+  store: {
+    stats: {
+      totalSKUs: 850,
+      lowStockItems: 12,
+      todayOrders: 45,
+      revenueToday: 2850.50,
+    },
+    topProducts: [
+      { name: 'Premium Dog Food 15kg', sales: 120 },
+      { name: 'Squeaky Toy Varied', sales: 85 },
+      { name: 'Cat Litter 10L', sales: 65 },
+      { name: 'Flea Treatment Dogs', sales: 45 },
+      { name: 'Leather Collar', sales: 30 },
+    ],
+    revenueByCategory: [
+      { month: 'Jan', food: 4000, medicine: 2400, accessories: 1200 },
+      { month: 'Feb', food: 3000, medicine: 1398, accessories: 1500 },
+      { month: 'Mar', food: 2000, medicine: 9800, accessories: 1800 },
+      { month: 'Apr', food: 2780, medicine: 3908, accessories: 2000 },
+      { month: 'May', food: 1890, medicine: 4800, accessories: 2181 },
+      { month: 'Jun', food: 2390, medicine: 3800, accessories: 2500 },
+    ],
+    inventory: [
+      { id: 'SKU-001', name: 'Premium Dry Dog Food', category: 'Food', stock: 45, reorder: 20, price: 54.99 },
+      { id: 'SKU-002', name: 'Flea & Tick Prevention', category: 'Medicine', stock: 8, reorder: 15, price: 29.99 },
+      { id: 'SKU-003', name: 'Interactive Cat Wand', category: 'Accessory', stock: 112, reorder: 30, price: 9.99 },
+      { id: 'SKU-004', name: 'Large Dog Bed', category: 'Accessory', stock: 5, reorder: 10, price: 65.00 },
+      { id: 'SKU-005', name: 'Grain-Free Salmon Mix', category: 'Food', stock: 24, reorder: 15, price: 42.50 },
+      { id: 'SKU-006', name: 'Joint Health Supplement', category: 'Medicine', stock: 3, reorder: 12, price: 34.00 },
+    ],
+    orders: [
+      { id: 'ORD-7721', customer: 'Alice Brown', items: 3, total: 124.50, status: 'processing' },
+      { id: 'ORD-7720', customer: 'David Clark', items: 1, total: 54.99, status: 'shipped' },
+      { id: 'ORD-7719', customer: 'Eva Green', items: 5, total: 210.25, status: 'delivered' },
+      { id: 'ORD-7718', customer: 'Frank Miller', items: 2, total: 44.98, status: 'processing' },
+      { id: 'ORD-7717', customer: 'Grace Lee', items: 1, total: 65.00, status: 'delivered' },
+    ]
+  }
+};

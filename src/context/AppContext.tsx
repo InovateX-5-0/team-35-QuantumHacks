@@ -20,11 +20,39 @@ export type Appointment = {
   id: string;
   userId: string;
   petId: string;
+  petName: string;
+  ownerName: string;
   clinicName: string;
   date: string;
   time: string;
   notes: string;
-  status: 'Upcoming' | 'Completed' | 'Cancelled';
+  status: 'Upcoming' | 'Completed' | 'Cancelled' | 'confirmed' | 'pending';
+  type?: string;
+};
+
+export type AdoptionApplication = {
+  id: string;
+  userId: string;
+  petId: string;
+  petName: string;
+  shelterId: string;
+  shelterName: string;
+  applicantName: string;
+  date: string;
+  status: 'pending' | 'approved' | 'rejected';
+  homeType: string;
+  experience: string;
+  message: string;
+};
+
+export type Order = {
+  id: string;
+  userId: string;
+  customerName: string;
+  items: { name: string; quantity: number; price: number }[];
+  total: number;
+  status: 'processing' | 'shipped' | 'delivered';
+  date: string;
 };
 
 export type UserProfile = {
@@ -42,6 +70,10 @@ interface AppContextType {
   appointments: Appointment[];
   addAppointment: (app: Omit<Appointment, 'id' | 'userId'>) => Promise<void>;
   cancelAppointment: (id: string) => Promise<void>;
+  adoptionApplications: AdoptionApplication[];
+  addAdoptionApplication: (app: Omit<AdoptionApplication, 'id' | 'userId'>) => Promise<void>;
+  orders: Order[];
+  addOrder: (order: Omit<Order, 'id' | 'userId'>) => Promise<void>;
   addVaccination: (petId: string, vaccination: Pet['vaccinations'][0]) => void;
   addMedicalRecord: (petId: string, record: Pet['medicalRecords'][0]) => void;
   isLoggedIn: boolean;
@@ -108,6 +140,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [user, setUser] = useState<UserProfile | null>(null);
   const [pets, setPets] = useState<Pet[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [adoptionApplications, setAdoptionApplications] = useState<AdoptionApplication[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -171,10 +205,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       handleFirestoreError(error, OperationType.LIST, 'appointments');
     });
 
+    // Listen to Adoption Applications
+    const qAdoptions = query(collection(db, 'adoption_applications'), where('userId', '==', uid));
+    const unsubscribeAdoptions = onSnapshot(qAdoptions, (snapshot) => {
+      const adoptionsData: AdoptionApplication[] = [];
+      snapshot.forEach((doc) => {
+        adoptionsData.push({ id: doc.id, ...doc.data() } as AdoptionApplication);
+      });
+      setAdoptionApplications(adoptionsData);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'adoption_applications');
+    });
+
+    // Listen to Orders
+    const qOrders = query(collection(db, 'orders'), where('userId', '==', uid));
+    const unsubscribeOrders = onSnapshot(qOrders, (snapshot) => {
+      const ordersData: Order[] = [];
+      snapshot.forEach((doc) => {
+        ordersData.push({ id: doc.id, ...doc.data() } as Order);
+      });
+      setOrders(ordersData);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'orders');
+    });
+
     return () => {
       unsubscribeUser();
       unsubscribePets();
       unsubscribeAppointments();
+      unsubscribeAdoptions();
+      unsubscribeOrders();
     };
   }, [isAuthReady, isLoggedIn]);
 
@@ -203,6 +263,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast('Appointment booked successfully!', 'success');
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'appointments');
+    }
+  };
+
+  const addAdoptionApplication = async (appData: Omit<AdoptionApplication, 'id' | 'userId'>) => {
+    if (!auth.currentUser) return;
+    try {
+      const newAppRef = doc(collection(db, 'adoption_applications'));
+      await setDoc(newAppRef, {
+        ...appData,
+        userId: auth.currentUser.uid
+      });
+      showToast('Adoption application submitted!', 'success');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, 'adoption_applications');
+    }
+  };
+
+  const addOrder = async (orderData: Omit<Order, 'id' | 'userId'>) => {
+    if (!auth.currentUser) return;
+    try {
+      const newOrderRef = doc(collection(db, 'orders'));
+      await setDoc(newOrderRef, {
+        ...orderData,
+        userId: auth.currentUser.uid
+      });
+      showToast('Order placed successfully!', 'success');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, 'orders');
     }
   };
 
@@ -257,7 +345,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider value={{ 
-      user, pets, addPet, appointments, addAppointment, cancelAppointment, addVaccination, addMedicalRecord, isLoggedIn, isAuthReady, logout, toast, showToast 
+      user, pets, addPet, appointments, addAppointment, cancelAppointment, 
+      adoptionApplications, addAdoptionApplication, orders, addOrder,
+      addVaccination, addMedicalRecord, isLoggedIn, isAuthReady, logout, toast, showToast 
     }}>
       {children}
     </AppContext.Provider>
