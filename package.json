@@ -8,7 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "expo build",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "dashboard": "vite --config vite.dashboard.config.ts",
+    "dashboard:build": "vite build --config vite.dashboard.config.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
@@ -40,11 +42,15 @@
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.8.0",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "react-router-dom": "^7.13.1",
+    "recharts": "^3.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
-    "typescript": "~5.8.2"
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "~5.8.2",
+    "vite": "^8.0.0"
   }
 }
