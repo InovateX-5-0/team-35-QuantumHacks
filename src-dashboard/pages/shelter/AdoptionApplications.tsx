@@ -61,6 +61,7 @@ export function AdoptionApplications() {
               <tr className="bg-slate-50/50 border-b border-slate-200">
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Applicant</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Pet</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600">Fee</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Date</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Status</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Home Type</th>
@@ -75,6 +76,7 @@ export function AdoptionApplications() {
                     <p className="text-xs text-slate-500">{app.experience}</p>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-slate-700">{app.petName}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-emerald-600">${app.adoptionFee || 0}</td>
                   <td className="px-6 py-4 text-sm text-slate-600">{app.date}</td>
                   <td className="px-6 py-4">
                     <Badge variant={

@@ -43,6 +43,7 @@ export type AdoptionApplication = {
   homeType: string;
   experience: string;
   message: string;
+  adoptionFee?: number;
 };
 
 export type Order = {

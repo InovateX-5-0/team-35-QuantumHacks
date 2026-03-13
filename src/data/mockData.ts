@@ -41,7 +41,11 @@ export const MOCK_ADOPTION_PETS = [
     location: 'Brooklyn, NY',
     image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=400',
     shelter: 'Brooklyn Animal Haven',
-    description: 'Luna is a friendly and energetic Golden Retriever looking for a forever home with a big backyard.'
+    description: 'Luna is a friendly and energetic Golden Retriever looking for a forever home with a big backyard.',
+    adoptionFee: 150,
+    personality: 'Friendly, Energetic, Loyal',
+    energy: 'High',
+    health: 'Vaccinated, Spayed'
   },
   {
     id: 'a2',
@@ -52,7 +56,11 @@ export const MOCK_ADOPTION_PETS = [
     location: 'Queens, NY',
     image: 'https://images.unsplash.com/photo-1573865668131-974279df4a94?auto=format&fit=crop&q=80&w=400',
     shelter: 'Happy Whiskers Shelter',
-    description: 'Oliver is a playful kitten who loves to cuddle and play with yarn.'
+    description: 'Oliver is a playful kitten who loves to cuddle and play with yarn.',
+    adoptionFee: 100,
+    personality: 'Playful, Curious, Cuddly',
+    energy: 'Medium',
+    health: 'Dewormed, Vaccinated'
   }
 ];
 

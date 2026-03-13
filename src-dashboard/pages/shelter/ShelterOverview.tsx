@@ -4,7 +4,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar 
 } from 'recharts';
-import { Home, Heart, FileText, PlusCircle } from 'lucide-react';
+import { Home, Heart, FileText, PlusCircle, DollarSign } from 'lucide-react';
 import { useFirebaseData } from '../../hooks/useFirebaseData';
 
 export function ShelterOverview() {
@@ -13,6 +13,10 @@ export function ShelterOverview() {
   
   const pendingApps = applications.filter(a => a.status === 'pending').length;
   const totalAnimals = patients.filter(p => !p.ownerId || p.ownerId === 'shelter').length;
+  const adoptionRevenue = applications
+    .filter(a => a.status === 'approved')
+    .reduce((acc, a) => acc + (a.adoptionFee || 0), 0);
+
   const COLORS = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981'];
 
   return (
@@ -22,7 +26,7 @@ export function ShelterOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { title: "Total Animals", value: Math.max(totalAnimals, stats.totalAnimals), icon: Home, color: "text-blue-600", bg: "bg-blue-100" },
-          { title: "Adopted This Month", value: stats.adoptedThisMonth, icon: Heart, color: "text-rose-600", bg: "bg-rose-100" },
+          { title: "Adoption Revenue", value: `$${adoptionRevenue || 0}`, icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-100" },
           { title: "Pending Applications", value: Math.max(pendingApps, stats.pendingApplications), icon: FileText, color: "text-amber-600", bg: "bg-amber-100" },
           { title: "New Arrivals", value: stats.newArrivals, icon: PlusCircle, color: "text-emerald-600", bg: "bg-emerald-100" }
         ].map((stat, i) => (

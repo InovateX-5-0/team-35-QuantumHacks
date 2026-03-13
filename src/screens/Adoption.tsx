@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { MOCK_ADOPTION_PETS } from '../data/mockData';
-import { Heart, Filter, Search, MapPin, Info, ChevronRight, X, CheckCircle2, Sparkles } from 'lucide-react';
+import { Heart, Filter, Search, MapPin, Info, ChevronRight, X, CheckCircle2, Sparkles, DollarSign } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +39,8 @@ const Adoption: React.FC = () => {
         status: 'pending',
         homeType: formData.homeType,
         experience: formData.experience,
-        message: formData.message
+        message: formData.message,
+        adoptionFee: selectedPet.adoptionFee || 0
       });
       setIsApplying(false);
       setSelectedPet(null);
@@ -123,23 +124,17 @@ const Adoption: React.FC = () => {
                   <MapPin size={10} /> {pet.location}
                 </p>
               </div>
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
-                      <img src={`https://i.pravatar.cc/100?u=${pet.id}${i}`} alt="user" referrerPolicy="no-referrer" />
-                    </div>
-                  ))}
-                  <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[8px] font-bold text-slate-400">
-                    +5
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex flex-col">
+                    <p className="text-[10px] font-bold text-slate-400">Adoption Fee</p>
+                    <p className="text-xs font-bold text-slate-900">${pet.adoptionFee}</p>
                   </div>
+                  <button className="text-primary text-xs font-bold">View Profile</button>
                 </div>
-                <button className="text-primary text-xs font-bold">View Profile</button>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </div>
 
       {/* Pet Detail Modal */}
       <AnimatePresence>
@@ -197,9 +192,49 @@ const Adoption: React.FC = () => {
 
                 <div className="mb-8">
                   <h3 className="font-bold text-lg mb-3">About {selectedPet.name}</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">
                     {selectedPet.description}
                   </p>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <p className="text-sm font-medium text-slate-600">Personality</p>
+                      </div>
+                      <p className="text-sm font-bold text-slate-900">{selectedPet.personality}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <p className="text-sm font-medium text-slate-600">Energy Level</p>
+                      </div>
+                      <p className="text-sm font-bold text-slate-900">{selectedPet.energy}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500">
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <p className="text-sm font-medium text-slate-600">Health Status</p>
+                      </div>
+                      <p className="text-sm font-bold text-slate-900">{selectedPet.health}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20">
+                      <div className="flex items-center gap-3">
+                        <DollarSign size={20} />
+                        <p className="text-sm font-medium">Adoption Fee</p>
+                      </div>
+                      <p className="text-xl font-bold">${selectedPet.adoptionFee}</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="card bg-primary-light border-none flex items-center gap-4 mb-8">
@@ -258,7 +293,7 @@ const Adoption: React.FC = () => {
                   <select 
                     className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm"
                     value={formData.experience}
-                    onChange={(e) => setFormData({ ...formData, experience: (e.target as HTMLSelectElement).value })}
+                    onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                   >
                     <option>First-time owner</option>
                     <option>Experienced owner</option>
@@ -270,7 +305,7 @@ const Adoption: React.FC = () => {
                   <select 
                     className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm"
                     value={formData.homeType}
-                    onChange={(e) => setFormData({ ...formData, homeType: (e.target as HTMLSelectElement).value })}
+                    onChange={(e) => setFormData({ ...formData, homeType: e.target.value })}
                   >
                     <option>Apartment</option>
                     <option>House with yard</option>
@@ -283,7 +318,7 @@ const Adoption: React.FC = () => {
                     className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm h-24 resize-none"
                     placeholder="Tell us about your home..."
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: (e.target as HTMLTextAreaElement).value })}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   />
                 </div>
                 <div className="flex gap-3 mt-6">
