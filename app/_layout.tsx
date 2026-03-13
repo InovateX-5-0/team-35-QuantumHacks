@@ -4,11 +4,9 @@ import { AppProvider } from '../context/AppContext';
 
 export default function RootLayout() {
   return (
-    <>
-      <AppProvider>
-        <StatusBar style="auto" />
-        <Slot />
-      </AppProvider>
-    </>
+    <AppProvider>
+      <StatusBar style="auto" />
+      <Slot />
+    </AppProvider>
   );
 }
