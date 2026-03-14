@@ -109,7 +109,7 @@ function App() {
   return (
     <RoleProvider>
       <ToastProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/dashboard">
           <AppContent />
         </BrowserRouter>
       </ToastProvider>

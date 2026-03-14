@@ -4,6 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/dashboard/',
   root: path.resolve(__dirname, 'src-dashboard'),
   build: {
     outDir: path.resolve(__dirname, 'dist-dashboard'),
