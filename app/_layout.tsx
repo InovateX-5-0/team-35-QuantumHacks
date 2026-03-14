@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AppProvider } from '../context/AppContext';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
@@ -30,12 +30,14 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
 
 export default function RootLayout() {
   return (
-    <AppProvider>
-      <StatusBar style="auto" />
-      <AuthWrapper>
-        <Slot />
-      </AuthWrapper>
-    </AppProvider>
+    <SafeAreaProvider>
+      <AppProvider>
+        <StatusBar style="auto" />
+        <AuthWrapper>
+          <Slot />
+        </AuthWrapper>
+      </AppProvider>
+    </SafeAreaProvider>
   );
 }
 
