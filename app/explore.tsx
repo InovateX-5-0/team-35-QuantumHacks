@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
-import { useLocalSearchParams, useRouter, Link } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import { Search, MapPin, Star, Phone, Clock, AlertCircle } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
 const Explore = () => {
   const router = useRouter();
-  const { filter: initialFilter } = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState(initialFilter === 'lost' ? 'Lost & Found' : 'Nearby Services');
+  const [activeTab, setActiveTab] = useState('Nearby Services');
 
   const categories = [
     { id: '1', name: 'Vet Clinics', icon: '🏥', color: '#fee2e2' },
