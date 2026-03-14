@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "npx expo export -p web && npm run dashboard:build && mv dist-dashboard dist/dashboard",
+  "outputDirectory": "dist",
   "redirects": [
     {
       "source": "/dashboard",
