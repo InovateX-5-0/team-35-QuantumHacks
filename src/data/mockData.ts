@@ -177,7 +177,7 @@ export const MOCK_PRODUCTS = [
     price: 89.00,
     category: 'Accessories',
     rating: 4.9,
-    image: 'https://plus.unsplash.com/premium_photo-1663127046026-999330612662?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1541599624620-fd5c98b8c654?auto=format&fit=crop&q=80&w=400',
     description: 'Slow-recovery memory foam for ultimate comfort.'
   },
   {
@@ -186,7 +186,7 @@ export const MOCK_PRODUCTS = [
     price: 15.50,
     category: 'Toys',
     rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1579380651705-e44013266a2b?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&q=80&w=400',
     description: 'Keeps your cat active and entertained for hours.'
   },
   {
@@ -195,7 +195,7 @@ export const MOCK_PRODUCTS = [
     price: 120.00,
     category: 'Tech',
     rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1585834882194-966904d99c43?auto=format&fit=crop&q=80&w=400',
     description: 'Schedule meals even when you are away.'
   }
 ];

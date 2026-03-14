@@ -11,7 +11,7 @@
     "lint": "expo lint",
     "dashboard": "vite --config vite.dashboard.config.ts",
     "dashboard:build": "vite build --config vite.dashboard.config.ts",
-    "vercel-build": "npx expo export -p web && npm run dashboard:build && mv dist-dashboard dist/dashboard"
+    "vercel-build": "npx expo export -p web && mkdir -p dist/dashboard && npm run dashboard:build && cp -rv dist-dashboard/* dist/dashboard/"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
