@@ -50,7 +50,7 @@ const Services = () => {
           {serviceCategories.map((cat, i) => (
             <Link key={i} href={cat.href as any} asChild>
               <TouchableOpacity style={styles.categoryItem}>
-                <View style={{ ...styles.categoryIcon, backgroundColor: cat.color }}>
+                <View style={[styles.categoryIcon, { backgroundColor: cat.color }]}>
                   <cat.icon size={28} color={cat.iconColor} />
                 </View>
                 <Text style={styles.categoryLabel}>{cat.label}</Text>

@@ -86,13 +86,13 @@ const Explore = () => {
         <View style={styles.tabContainer}>
             <TouchableOpacity 
                 onPress={() => setActiveTab('Nearby Services')}
-                style={{ ...styles.tab, ...(activeTab === 'Nearby Services' ? styles.activeTab : {}) }}
+                style={[styles.tab, activeTab === 'Nearby Services' && styles.activeTab]}
             >
                 <Text style={[styles.tabText, activeTab === 'Nearby Services' && styles.activeTabText]}>Services</Text>
             </TouchableOpacity>
             <TouchableOpacity 
                 onPress={() => setActiveTab('Lost & Found')}
-                style={{ ...styles.tab, ...(activeTab === 'Lost & Found' ? styles.activeTab : {}) }}
+                style={[styles.tab, activeTab === 'Lost & Found' && styles.activeTab]}
             >
                 <Text style={[styles.tabText, activeTab === 'Lost & Found' && styles.activeTabText]}>Lost & Found</Text>
             </TouchableOpacity>
@@ -127,7 +127,7 @@ const Explore = () => {
                             };
                             return (
                                 <Link key={category.id} href={routeMap[category.name] as any} asChild>
-                                    <TouchableOpacity style={{ ...styles.categoryCard, backgroundColor: category.color }}>
+                                    <TouchableOpacity style={[styles.categoryCard, { backgroundColor: category.color }]}>
                                         <Text style={styles.categoryIcon}>{category.icon}</Text>
                                         <Text style={styles.categoryName}>{category.name}</Text>
                                     </TouchableOpacity>

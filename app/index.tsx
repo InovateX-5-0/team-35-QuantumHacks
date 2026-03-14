@@ -56,7 +56,7 @@ const Home = () => {
           {quickActions.map((action, i) => (
             <Link key={i} href={action.href} asChild>
               <TouchableOpacity style={styles.actionBtn}>
-                <View style={{ ...styles.actionIcon, backgroundColor: action.color }}>
+                <View style={[styles.actionIcon, { backgroundColor: action.color }]}>
                   <action.icon size={24} color={action.iconColor} />
                 </View>
                 <Text style={styles.actionLabel}>{action.label}</Text>
