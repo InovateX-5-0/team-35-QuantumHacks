@@ -13,6 +13,8 @@ interface Pet {
   breed: string;
   age: number;
   image: string;
+  vaccinations: Array<{ name: string; date: string; nextDue: string }>;
+  medicalRecords: Array<{ diagnosis: string; date: string; vet: string }>;
 }
 
 interface Appointment {
@@ -51,6 +53,7 @@ interface AppContextType {
   addPet: (pet: Omit<Pet, 'id'>) => void;
   updatePet: (id: string, petData: Partial<Pet>) => void;
   deletePet: (id: string) => void;
+  addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
   addAdoptionApplication: (app: AdoptionApplication) => Promise<void>;
 }
 
@@ -79,6 +82,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       breed: 'Golden Retriever',
       age: 3,
       image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200',
+      vaccinations: [
+        { name: 'Rabies', date: 'Oct 2025', nextDue: 'Oct 2026' },
+        { name: 'DHPP', date: 'Jan 2026', nextDue: 'Jan 2027' }
+      ],
+      medicalRecords: [
+        { diagnosis: 'Annual Checkup', date: 'Jan 2026', vet: 'Dr. Smith' }
+      ]
     },
     {
       id: '2',
@@ -87,9 +97,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       breed: 'German Shepherd',
       age: 5,
       image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200',
+      vaccinations: [
+        { name: 'Rabies', date: 'Dec 2025', nextDue: 'Dec 2026' },
+        { name: 'Bordetella', date: 'Feb 2026', nextDue: 'Aug 2026' }
+      ],
+      medicalRecords: [
+        { diagnosis: 'Ear Infection', date: 'Feb 2026', vet: 'Dr. House' }
+      ]
     },
   ]);
-  const [appointments] = useState<Appointment[]>([
+  const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: '1',
       petId: '1',
@@ -110,8 +127,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(prev => prev ? { ...prev, ...userData } : null);
   };
 
-  const addPet = (pet: Omit<Pet, 'id'>) => {
-    const newPet = { ...pet, id: Math.random().toString(36).substr(2, 9) };
+  const addPet = (pet: Omit<Pet, 'id' | 'vaccinations' | 'medicalRecords'>) => {
+    const newPet = { 
+      ...pet, 
+      id: Math.random().toString(36).substr(2, 9),
+      vaccinations: [],
+      medicalRecords: []
+    };
     setPets(prev => [...prev, newPet]);
   };
 
@@ -121,6 +143,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deletePet = (id: string) => {
     setPets(prev => prev.filter(pet => pet.id !== id));
+  };
+
+  const addAppointment = (appointment: Omit<Appointment, 'id'>) => {
+    const newAppointment = { ...appointment, id: Math.random().toString(36).substr(2, 9) };
+    setAppointments(prev => [...prev, newAppointment]);
   };
 
   const addAdoptionApplication = async (app: AdoptionApplication) => {
@@ -141,6 +168,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       addPet,
       updatePet,
       deletePet,
+      addAppointment,
       addAdoptionApplication 
     }}>
       {children}

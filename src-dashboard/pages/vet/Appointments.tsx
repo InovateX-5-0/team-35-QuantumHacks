@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Badge } from '../../components/ui/Badge';
 import { useToast } from '../../context/ToastContext';
-import { Search, Filter, Calendar, Clock, CheckCircle, XCircle, AlertCircle, MoreVertical, CheckCircle2 } from 'lucide-react';
+import { Search, Filter, Calendar, Clock, CheckCircle, XCircle, AlertCircle, MoreVertical, CheckCircle2, Plus, X } from 'lucide-react';
 import { useFirebaseData } from '../../hooks/useFirebaseData';
 import { db } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -11,6 +11,21 @@ export function Appointments() {
   const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newAppt, setNewAppt] = useState({
+    petName: '',
+    ownerName: '',
+    time: '',
+    type: 'Checkup',
+  });
+
+  const handleAddAppointment = (e: React.FormEvent) => {
+    e.preventDefault();
+    // For now we just toast success as it's a mock dashboard
+    showToast('New appointment scheduled successfully!', 'success');
+    setIsModalOpen(false);
+    setNewAppt({ petName: '', ownerName: '', time: '', type: 'Checkup' });
+  };
 
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     try {
@@ -61,6 +76,13 @@ export function Appointments() {
           <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors font-medium">
             <Filter size={18} />
             Filter
+          </button>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition-colors font-bold shadow-lg shadow-teal-200"
+          >
+            <Plus size={18} />
+            Add New
           </button>
         </div>
       </div>

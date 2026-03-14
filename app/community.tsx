@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert, Share } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import BottomTab from '../components/Navigation';
 import { Heart, MessageCircle, Share2, Search, Plus } from 'lucide-react-native';
@@ -117,7 +117,27 @@ const Community = () => {
                     <Text style={styles.actionCount}>{post.comments}</Text>
                   </TouchableOpacity>
                 </Link>
-                <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Shared', 'Post link copied to clipboard!')}>
+                <TouchableOpacity 
+                  style={styles.actionButton} 
+                  onPress={async () => {
+                    try {
+                      const result = await Share.share({
+                        message: `Check out this post from ${post.user} on PawCare: ${post.content}`,
+                      });
+                      if (result.action === Share.sharedAction) {
+                        if (result.activityType) {
+                          // shared with activity type of result.activityType
+                        } else {
+                          // shared
+                        }
+                      } else if (result.action === Share.dismissedAction) {
+                        // dismissed
+                      }
+                    } catch (error: any) {
+                      Alert.alert(error.message);
+                    }
+                  }}
+                >
                   <Share2 size={20} color="#64748b" />
                   <Text style={[styles.actionCount, styles.shareText]}>Share</Text>
                 </TouchableOpacity>

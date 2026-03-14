@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
-import { Plus, Calendar, Syringe } from 'lucide-react-native';
+import { Plus, Calendar, Syringe, Clipboard, X, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
 const Pets = () => {
   const { pets, appointments } = useApp();
   const router = useRouter();
+  const [selectedPet, setSelectedPet] = React.useState<any>(null);
+  const [showVaxModal, setShowVaxModal] = React.useState(false);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -58,7 +60,13 @@ const Pets = () => {
                     </View>
                   )}
                   <View style={styles.petActions}>
-                    <TouchableOpacity style={styles.actionBtn}>
+                    <TouchableOpacity 
+                      style={styles.actionBtn}
+                      onPress={() => {
+                        setSelectedPet(pet);
+                        setShowVaxModal(true);
+                      }}
+                    >
                       <Syringe size={16} color="#48d877" />
                       <Text style={styles.actionText}>Vaccination</Text>
                     </TouchableOpacity>
@@ -78,6 +86,64 @@ const Pets = () => {
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomTab />
+
+      {/* Vaccination & Records Modal */}
+      <Modal
+        visible={showVaxModal}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <View style={styles.modalTitleRow}>
+                <Syringe size={24} color="#48d877" />
+                <Text style={styles.modalTitle}>{selectedPet?.name}'s Records</Text>
+              </View>
+              <TouchableOpacity onPress={() => setShowVaxModal(false)}>
+                <X size={24} color="#64748b" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.cardSectionTitle}>Vaccinations</Text>
+              {selectedPet?.vaccinations?.length > 0 ? (
+                selectedPet.vaccinations.map((vax: any, i: number) => (
+                  <View key={i} style={styles.recordItem}>
+                    <View>
+                      <Text style={styles.recordName}>{vax.name}</Text>
+                      <Text style={styles.recordSub}>Last dose: {vax.date}</Text>
+                    </View>
+                    <View style={styles.nextDueBadge}>
+                      <Text style={styles.nextDueText}>Due: {vax.nextDue}</Text>
+                    </View>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.emptyText}>No vaccinations on record.</Text>
+              )}
+
+              <Text style={[styles.cardSectionTitle, { marginTop: 24 }]}>Medical History</Text>
+              {selectedPet?.medicalRecords?.length > 0 ? (
+                selectedPet.medicalRecords.map((rec: any, i: number) => (
+                  <View key={i} style={styles.recordItem}>
+                    <View>
+                      <Text style={styles.recordName}>{rec.diagnosis}</Text>
+                      <Text style={styles.recordSub}>{rec.vet} • {rec.date}</Text>
+                    </View>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.emptyText}>No medical records found.</Text>
+              )}
+            </ScrollView>
+
+            <TouchableOpacity style={styles.closeBtn} onPress={() => setShowVaxModal(false)}>
+              <Text style={styles.closeBtnText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -211,6 +277,91 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: '#475569',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  modalTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#0f172a',
+  },
+  cardSectionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#64748b',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 12,
+  },
+  recordItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  recordName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0f172a',
+    marginBottom: 2,
+  },
+  recordSub: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  nextDueBadge: {
+    backgroundColor: '#fef3c7',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  nextDueText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#d97706',
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#94a3b8',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginVertical: 12,
+  },
+  closeBtn: {
+    backgroundColor: '#48d877',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 24,
+  },
+  closeBtnText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

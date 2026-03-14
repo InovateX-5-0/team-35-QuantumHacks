@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { ChevronLeft, Calendar as CalendarIcon, Clock, CheckCircle2 } from 'lucide-react-native';
+import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
+import { Alert } from 'react-native';
 
 const Booking = () => {
   const router = useRouter();
+  const { addAppointment, pets } = useApp();
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState('15');
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
+  const [petName, setPetName] = useState('');
+  const [reason, setReason] = useState('');
   
   const dates = ['14', '15', '16', '17', '18'];
   const times = ['09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '04:00 PM'];
@@ -66,7 +71,16 @@ const Booking = () => {
               ))}
             </View>
 
-            <TouchableOpacity style={styles.nextBtn} onPress={() => setStep(2)}>
+            <TouchableOpacity 
+              style={styles.nextBtn} 
+              onPress={() => {
+                if (!selectedDate || !selectedTime) {
+                  Alert.alert('Selection Required', 'Please select both a date and time.');
+                  return;
+                }
+                setStep(2);
+              }}
+            >
               <Text style={styles.nextBtnText}>Continue to Details</Text>
             </TouchableOpacity>
           </>
@@ -75,11 +89,22 @@ const Booking = () => {
             <Text style={styles.sectionTitle}>Your Information</Text>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Pet Name</Text>
-              <TextInput style={styles.input} placeholder="e.g. Bella" />
+              <TextInput 
+                style={styles.input} 
+                placeholder="e.g. Bella" 
+                value={petName}
+                onChangeText={setPetName}
+              />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Reason for Visit</Text>
-              <TextInput style={styles.input} placeholder="e.g. Annual Checkup" multiline />
+              <TextInput 
+                style={styles.input} 
+                placeholder="e.g. Annual Checkup" 
+                multiline 
+                value={reason}
+                onChangeText={setReason}
+              />
             </View>
 
             <View style={styles.summaryCard}>
@@ -94,7 +119,29 @@ const Booking = () => {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.nextBtn} onPress={() => setStep(3)}>
+            <TouchableOpacity 
+              style={styles.nextBtn} 
+              onPress={() => {
+                if (!petName || !reason) {
+                  Alert.alert('Missing Info', 'Please provide a pet name and reason for the visit.');
+                  return;
+                }
+                
+                // Find pet ID if it exists, otherwise use a placeholder
+                const pet = pets.find(p => p.name.toLowerCase() === petName.toLowerCase());
+                
+                addAppointment({
+                  petId: pet ? pet.id : 'temp-id',
+                  clinicName: 'Happy Paws Vet Clinic',
+                  date: `Mar ${selectedDate}, 2026`,
+                  time: selectedTime,
+                  status: 'Upcoming',
+                  type: reason
+                });
+                
+                setStep(3);
+              }}
+            >
               <Text style={styles.nextBtnText}>Confirm Booking</Text>
             </TouchableOpacity>
           </>
