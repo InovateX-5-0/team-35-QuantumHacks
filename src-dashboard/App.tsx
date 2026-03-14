@@ -72,6 +72,33 @@ function AppContent() {
           </>
         )}
 
+        {/* Grooming Routes */}
+        {role === 'grooming' && (
+          <>
+            <Route path="/overview" element={<PlaceholderPage title="Grooming Overview" />} />
+            <Route path="/appointments" element={<PlaceholderPage title="Grooming Appointments" />} />
+            <Route path="/services" element={<PlaceholderPage title="Grooming Services" />} />
+          </>
+        )}
+
+        {/* Training Routes */}
+        {role === 'training' && (
+          <>
+            <Route path="/overview" element={<PlaceholderPage title="Training Overview" />} />
+            <Route path="/classes" element={<PlaceholderPage title="Training Classes" />} />
+            <Route path="/trainers" element={<PlaceholderPage title="Trainer Management" />} />
+          </>
+        )}
+
+        {/* Parks Routes */}
+        {role === 'parks' && (
+          <>
+            <Route path="/overview" element={<PlaceholderPage title="Parks Overview" />} />
+            <Route path="/visitors" element={<PlaceholderPage title="Visitor Traffic" />} />
+            <Route path="/alerts" element={<PlaceholderPage title="Park Alerts" />} />
+          </>
+        )}
+
         <Route path="*" element={<Navigate to="/overview" replace />} />
       </Routes>
     </DashboardLayout>

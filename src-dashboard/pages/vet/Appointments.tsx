@@ -7,7 +7,7 @@ import { db } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export function Appointments() {
-  const { appointments, loading } = useFirebaseData();
+  const { appointments, loading, error } = useFirebaseData();
   const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -30,7 +30,14 @@ export function Appointments() {
     return matchesSearch && matchesStatus;
   });
 
-  if (loading) return <div className="p-8 text-center text-slate-500">Loading appointments...</div>;
+  if (loading) return <div className="p-8 text-center text-slate-500 font-medium">Loading appointments...</div>;
+  if (error) return (
+    <div className="p-12 text-center bg-rose-50 rounded-2xl border border-rose-100 mx-auto max-w-lg">
+      <AlertCircle className="mx-auto text-rose-500 mb-4" size={40} />
+      <h3 className="text-lg font-bold text-rose-900 mb-2">Access Error</h3>
+      <p className="text-rose-600">{error}</p>
+    </div>
+  );
 
   return (
     <div className="space-y-6">

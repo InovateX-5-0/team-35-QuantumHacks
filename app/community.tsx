@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import BottomTab from '../components/Navigation';
 import { Heart, MessageCircle, Share2, Search, Plus } from 'lucide-react-native';
 
@@ -80,10 +81,12 @@ const Community = () => {
         </View>
 
         {/* Create Post Button */}
-        <TouchableOpacity style={styles.createPostBtn}>
-          <Plus size={20} color="#ffffff" />
-          <Text style={styles.createPostText}>Create Post</Text>
-        </TouchableOpacity>
+        <Link href="/create-post" asChild>
+          <TouchableOpacity style={styles.createPostBtn}>
+            <Plus size={20} color="#ffffff" />
+            <Text style={styles.createPostText}>Create Post</Text>
+          </TouchableOpacity>
+        </Link>
 
         {/* Posts Feed */}
         <View style={styles.feed}>
@@ -108,11 +111,13 @@ const Community = () => {
                   <Heart size={20} color="#ef4444" />
                   <Text style={styles.actionCount}>{post.likes}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                  <MessageCircle size={20} color="#3b82f6" />
-                  <Text style={styles.actionCount}>{post.comments}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                <Link href={{ pathname: '/contact', params: { name: post.user } }} asChild>
+                  <TouchableOpacity style={styles.actionButton}>
+                    <MessageCircle size={20} color="#3b82f6" />
+                    <Text style={styles.actionCount}>{post.comments}</Text>
+                  </TouchableOpacity>
+                </Link>
+                <TouchableOpacity style={styles.actionButton} onPress={() => Alert.alert('Shared', 'Post link copied to clipboard!')}>
                   <Share2 size={20} color="#64748b" />
                   <Text style={[styles.actionCount, styles.shareText]}>Share</Text>
                 </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type RoleType = 'vet' | 'shelter' | 'store' | null;
+export type RoleType = 'vet' | 'shelter' | 'store' | 'grooming' | 'training' | 'parks' | null;
 
 interface RoleContextType {
   role: RoleType;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
+import { useRouter, Link } from 'expo-router';
 import { ChevronLeft, MapPin, AlertCircle, Search, Filter, Plus } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
@@ -75,10 +75,12 @@ const LostFound = () => {
 
         {/* Action Buttons */}
         <View style={styles.actionRow}>
-            <TouchableOpacity style={styles.reportBtn}>
-                <Plus size={20} color="#ffffff" />
-                <Text style={styles.reportBtnText}>Report a Pet</Text>
-            </TouchableOpacity>
+            <Link href="/report-pet" asChild>
+              <TouchableOpacity style={styles.reportBtn}>
+                  <Plus size={20} color="#ffffff" />
+                  <Text style={styles.reportBtnText}>Report a Pet</Text>
+              </TouchableOpacity>
+            </Link>
         </View>
 
         {/* Feed */}
@@ -103,9 +105,11 @@ const LostFound = () => {
                 </View>
                 <View style={styles.cardFooter}>
                     <Text style={styles.timeAgo}>{pet.time}</Text>
-                    <TouchableOpacity style={styles.contactBtn}>
-                        <Text style={styles.contactText}>Contact</Text>
-                    </TouchableOpacity>
+                    <Link href={{ pathname: '/contact', params: { name: pet.name || 'Owner' } }} asChild>
+                        <TouchableOpacity style={styles.contactBtn}>
+                            <Text style={styles.contactText}>Contact</Text>
+                        </TouchableOpacity>
+                    </Link>
                 </View>
               </View>
             </TouchableOpacity>
