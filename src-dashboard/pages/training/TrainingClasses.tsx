@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Badge } from '../../components/ui/Badge';
 import { Calendar, Clock, User, Plus, X } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 import { mockData } from '../../data/mockData';
 
 export function TrainingClasses() {
@@ -12,12 +13,15 @@ export function TrainingClasses() {
     trainer: '',
   });
 
+  const { toast } = useToast();
+
   const handleCreateClass = (e: React.FormEvent) => {
     e.preventDefault();
     const id = (classes.length + 1).toString();
     setClasses([...classes, { ...newClass, id, status: 'Active' }]);
     setIsModalOpen(false);
     setNewClass({ name: '', time: '', trainer: '' });
+    toast('Class created successfully!', 'success');
   };
 
   return (
@@ -36,7 +40,7 @@ export function TrainingClasses() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {classes.map((cls) => (
+        {classes.map((cls: any) => (
           <div key={cls.id} className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-all">
             <div className="flex justify-between items-start mb-6">
               <div className="bg-orange-50 text-orange-600 p-3 rounded-xl font-bold text-sm">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Star, MessageSquare, Plus, Search, X } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 import { mockData } from '../../data/mockData';
 
 export function ParkDirectory() {
@@ -13,12 +14,16 @@ export function ParkDirectory() {
     type: 'Dog',
   });
 
+  const { toast } = useToast();
+
   const handleAddPark = (e: React.FormEvent) => {
     e.preventDefault();
     const id = (directory.length + 1).toString();
-    setDirectory([...directory, { ...newPark, id, rating: 5.0, reviews: 0 }]);
+    // @ts-ignore
+    setDirectory([...directory, { ...newPark, id, rating: 5.0 }]);
     setIsModalOpen(false);
     setNewPark({ name: '', location: '', status: 'Open', type: 'Dog' });
+    toast('Park added successfully!', 'success');
   };
 
   return (
@@ -39,7 +44,7 @@ export function ParkDirectory() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {directory.map((park) => (
+          {directory.map((park: any) => (
             <div key={park.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">

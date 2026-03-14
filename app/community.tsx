@@ -1,13 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert, Share } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput, Alert, Share, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import BottomTab from '../components/Navigation';
 import { Heart, MessageCircle, Share2, Search, Plus } from 'lucide-react-native';
 
+interface Post {
+  id: string;
+  user: string;
+  avatar: string;
+  content: string;
+  image?: string;
+  likes: number;
+  isLiked: boolean;
+  comments: number;
+  timeAgo: string;
+}
+
 const Community = () => {
   const [searchQuery, setSearchQuery] = useState('');
-
-  const posts = [
+  const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
+  const [activePostId, setActivePostId] = useState<string | null>(null);
+  const [commentText, setCommentText] = useState('');
+  const [posts, setPosts] = useState<Post[]>([
     {
       id: '1',
       user: 'Sarah Johnson',
@@ -15,6 +29,7 @@ const Community = () => {
       content: 'Just adopted this little angel from the local shelter! Meet Luna 🐶',
       image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=400',
       likes: 124,
+      isLiked: false,
       comments: 18,
       timeAgo: '2 hours ago',
     },
@@ -24,6 +39,7 @@ const Community = () => {
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100',
       content: 'Looking for recommendations for a good dog trainer in the downtown area. Any suggestions?',
       likes: 45,
+      isLiked: false,
       comments: 32,
       timeAgo: '5 hours ago',
     },
@@ -34,6 +50,7 @@ const Community = () => {
       content: 'Tips for first-time pet owners! Here are 5 things I wish I knew before getting my cat...',
       image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
       likes: 289,
+      isLiked: false,
       comments: 56,
       timeAgo: '1 day ago',
     },
@@ -44,6 +61,7 @@ const Community = () => {
       content: 'Any tips for training a parrot? Ziggy is a bit too loud in the mornings! 🦜',
       image: 'https://images.unsplash.com/photo-1522850949506-32f65ea53fc9?auto=format&fit=crop&q=80&w=400',
       likes: 18,
+      isLiked: false,
       comments: 15,
       timeAgo: '12h ago'
     },
@@ -54,10 +72,62 @@ const Community = () => {
       content: 'Rex finally learned "Roll Over"! So proud of my smart boy. 🐕🦴',
       image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&q=80&w=400',
       likes: 56,
+      isLiked: false,
       comments: 12,
       timeAgo: '1 day ago'
     }
-  ];
+  ]);
+
+  const handleLike = (postId: string) => {
+    setPosts((prev: Post[]) => prev.map((post: Post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          isLiked: !post.isLiked,
+          likes: post.isLiked ? post.likes - 1 : post.likes + 1
+        };
+      }
+      return post;
+    }));
+  };
+
+  const handleComment = (postId: string) => {
+    setActivePostId(postId);
+    setCommentText('');
+    setIsCommentModalVisible(true);
+  };
+
+  const submitComment = () => {
+    if (!commentText.trim() || !activePostId) return;
+
+    setPosts((prev: Post[]) => prev.map((post: Post) => {
+      if (post.id === activePostId) {
+        return {
+          ...post,
+          comments: post.comments + 1
+        };
+      }
+      return post;
+    }));
+    
+    setIsCommentModalVisible(false);
+    setActivePostId(null);
+    setCommentText('');
+    Alert.alert('Success', 'Comment added successfully!');
+  };
+
+  const handleShare = async (post: Post) => {
+    try {
+      const result = await Share.share({
+        message: `Check out this post from ${post.user} on PawCare: ${post.content}`,
+      });
+      if (result.action === Share.sharedAction) {
+        // Shared successfully
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -107,36 +177,32 @@ const Community = () => {
               )}
 
               <View style={styles.postActions}>
-                <TouchableOpacity style={styles.actionButton}>
-                  <Heart size={20} color="#ef4444" />
-                  <Text style={styles.actionCount}>{post.likes}</Text>
-                </TouchableOpacity>
-                <Link href={{ pathname: '/contact', params: { name: post.user } }} asChild>
-                  <TouchableOpacity style={styles.actionButton}>
-                    <MessageCircle size={20} color="#3b82f6" />
-                    <Text style={styles.actionCount}>{post.comments}</Text>
-                  </TouchableOpacity>
-                </Link>
                 <TouchableOpacity 
                   style={styles.actionButton} 
-                  onPress={async () => {
-                    try {
-                      const result = await Share.share({
-                        message: `Check out this post from ${post.user} on PawCare: ${post.content}`,
-                      });
-                      if (result.action === Share.sharedAction) {
-                        if (result.activityType) {
-                          // shared with activity type of result.activityType
-                        } else {
-                          // shared
-                        }
-                      } else if (result.action === Share.dismissedAction) {
-                        // dismissed
-                      }
-                    } catch (error: any) {
-                      Alert.alert(error.message);
-                    }
-                  }}
+                  onPress={() => handleLike(post.id)}
+                >
+                  <Heart 
+                    size={20} 
+                    color={post.isLiked ? "#ef4444" : "#64748b"} 
+                    fill={post.isLiked ? "#ef4444" : "transparent"} 
+                  />
+                  <Text style={[
+                    styles.actionCount,
+                    post.isLiked && { color: '#ef4444' }
+                  ]}>{post.likes}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.actionButton}
+                  onPress={() => handleComment(post.id)}
+                >
+                  <MessageCircle size={20} color="#3b82f6" />
+                  <Text style={styles.actionCount}>{post.comments}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.actionButton} 
+                  onPress={() => handleShare(post)}
                 >
                   <Share2 size={20} color="#64748b" />
                   <Text style={[styles.actionCount, styles.shareText]}>Share</Text>
@@ -148,6 +214,49 @@ const Community = () => {
 
         <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* Comment Modal */}
+      <Modal
+        visible={isCommentModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsCommentModalVisible(false)}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add Comment</Text>
+              <TouchableOpacity onPress={() => setIsCommentModalVisible(false)}>
+                <Text style={styles.closeBtn}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <TextInput
+              style={styles.modalInput}
+              placeholder="What's on your mind?"
+              multiline
+              autoFocus
+              value={commentText}
+              onChangeText={setCommentText}
+            />
+
+            <TouchableOpacity 
+              style={[
+                styles.submitBtn,
+                !commentText.trim() && styles.submitBtnDisabled
+              ]} 
+              onPress={submitComment}
+              disabled={!commentText.trim()}
+            >
+              <Text style={styles.submitBtnText}>Post Comment</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+
       <BottomTab />
     </View>
   );
@@ -282,6 +391,65 @@ const styles = StyleSheet.create({
   },
   shareText: {
     color: '#64748b',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    minHeight: 300,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#0f172a',
+  },
+  closeBtn: {
+    fontSize: 16,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  modalInput: {
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 16,
+    fontSize: 16,
+    color: '#0f172a',
+    textAlignVertical: 'top',
+    minHeight: 120,
+    marginBottom: 20,
+  },
+  submitBtn: {
+    backgroundColor: '#48d877',
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: 'center',
+    shadowColor: '#48d877',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  submitBtnDisabled: {
+    backgroundColor: '#e2e8f0',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  submitBtnText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

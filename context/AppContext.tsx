@@ -4,6 +4,9 @@ interface User {
   id: string;
   name: string;
   email: string;
+  avatar: string;
+  phone?: string;
+  location?: string;
 }
 
 interface Pet {
@@ -41,20 +44,39 @@ interface AdoptionApplication {
   adoptionFee: number;
 }
 
+interface CartItem extends PetProduct {
+  quantity: number;
+}
+
+interface PetProduct {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  rating: number;
+  image: string;
+  description: string;
+}
+
 interface AppContextType {
   user: User | null;
   pets: Pet[];
   appointments: Appointment[];
   applications: AdoptionApplication[];
+  cart: CartItem[];
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
-  addPet: (pet: Omit<Pet, 'id'>) => void;
+  addPet: (pet: Omit<Pet, 'id' | 'vaccinations' | 'medicalRecords'>) => void;
   updatePet: (id: string, petData: Partial<Pet>) => void;
   deletePet: (id: string) => void;
   addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
   addAdoptionApplication: (app: AdoptionApplication) => Promise<void>;
+  addToCart: (product: PetProduct, quantity: number) => void;
+  removeFromCart: (productId: string) => void;
+  updateCartQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -71,8 +93,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [user, setUser] = useState<User | null>({
     id: '1',
-    name: 'Pet Owner',
-    email: 'owner@petcare.com',
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100',
+    phone: '+1 (555) 000-0000',
+    location: 'San Francisco, CA'
   });
   const [pets, setPets] = useState<Pet[]>([
     {
@@ -119,6 +144,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   ]);
 
   const [applications, setApplications] = useState<AdoptionApplication[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   const login = () => setIsLoggedIn(true);
   const logout = () => setIsLoggedIn(false);
@@ -155,6 +181,36 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     console.log('Adoption application submitted:', app);
   };
 
+  const addToCart = (product: PetProduct, quantity: number) => {
+    setCart(prev => {
+      const existingItem = prev.find(item => item.id === product.id);
+      if (existingItem) {
+        return prev.map(item => 
+          item.id === product.id 
+            ? { ...item, quantity: item.quantity + quantity } 
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity }];
+    });
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.id !== productId));
+  };
+
+  const updateCartQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    setCart(prev => prev.map(item => 
+      item.id === productId ? { ...item, quantity } : item
+    ));
+  };
+
+  const clearCart = () => setCart([]);
+
   return (
     <AppContext.Provider value={{ 
       user, 
@@ -169,7 +225,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       updatePet,
       deletePet,
       addAppointment,
-      addAdoptionApplication 
+      addAdoptionApplication,
+      cart,
+      addToCart,
+      removeFromCart,
+      updateCartQuantity,
+      clearCart
     }}>
       {children}
     </AppContext.Provider>

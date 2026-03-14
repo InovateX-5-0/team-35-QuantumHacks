@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Image, Alert, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useApp } from '../context/AppContext';
-import { ArrowLeft, Camera, PawPrint } from 'lucide-react-native';
+import { ArrowLeft, Camera, PawPrint, CheckCircle2 } from 'lucide-react-native';
 
 const AddPet = () => {
   const router = useRouter();
@@ -16,6 +16,8 @@ const AddPet = () => {
     age: '',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200',
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSave = () => {
     if (!form.name || !form.breed || !form.age) {
@@ -23,14 +25,23 @@ const AddPet = () => {
       return;
     }
 
-    addPet({
-      ...form,
-      age: parseInt(form.age),
-    });
+    setIsSaving(true);
+    
+    // Simulate "Adding..." for better UX
+    setTimeout(() => {
+      addPet({
+        ...form,
+        age: parseInt(form.age),
+      });
+      
+      setIsSaving(false);
+      setIsSuccess(true);
 
-    Alert.alert('Success', 'Pet added successfully!', [
-      { text: 'OK', onPress: () => router.back() }
-    ]);
+      // Show success for 1.5s then redirect
+      setTimeout(() => {
+        router.push('/pets');
+      }, 1500);
+    }, 1000);
   };
 
   const petTypes = ['Dog', 'Cat', 'Bird', 'Rabbit', 'Other'];
@@ -118,6 +129,27 @@ const AddPet = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* Saving Overlay */}
+      {isSaving && (
+        <View style={styles.overlay}>
+          <View style={styles.overlayContent}>
+            <ActivityIndicator size="large" color="#48d877" />
+            <Text style={styles.overlayText}>Adding your new pet...</Text>
+          </View>
+        </View>
+      )}
+
+      {/* Success Overlay */}
+      {isSuccess && (
+        <View style={styles.overlay}>
+          <View style={styles.overlayContent}>
+            <CheckCircle2 size={64} color="#48d877" />
+            <Text style={styles.overlayText}>Pet Added Successfully!</Text>
+            <Text style={styles.subOverlayText}>Returning to your pet list...</Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -240,6 +272,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  overlayContent: {
+    alignItems: 'center',
+    gap: 16,
+  },
+  overlayText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#0f172a',
+  },
+  subOverlayText: {
+    fontSize: 14,
+    color: '#64748b',
   },
   saveBtnText: {
     fontSize: 16,

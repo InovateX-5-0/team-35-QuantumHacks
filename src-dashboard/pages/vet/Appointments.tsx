@@ -8,7 +8,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 export function Appointments() {
   const { appointments, loading, error } = useFirebaseData();
-  const { showToast } = useToast();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,8 +21,7 @@ export function Appointments() {
 
   const handleAddAppointment = (e: React.FormEvent) => {
     e.preventDefault();
-    // @ts-ignore
-    showToast({ message: 'New appointment scheduled successfully!', variant: 'success' });
+    toast('New appointment scheduled successfully!', 'success');
     setIsModalOpen(false);
     setNewAppt({ petName: '', ownerName: '', time: '', type: 'Checkup' });
   };
@@ -31,11 +30,9 @@ export function Appointments() {
     try {
       const appRef = doc(db, 'appointments', id);
       await updateDoc(appRef, { status: newStatus });
-      // @ts-ignore - showToast exists in context
-      showToast({ message: `Appointment ${newStatus} successfully!`, variant: newStatus === 'cancelled' ? 'error' : 'success' });
+      toast(`Appointment ${newStatus} successfully!`, newStatus === 'cancelled' ? 'error' : 'success');
     } catch (error) {
-      // @ts-ignore
-      showToast({ message: 'Failed to update status', variant: 'error' });
+      toast('Failed to update status', 'error');
     }
   };
 

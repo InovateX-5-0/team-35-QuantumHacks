@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useApp } from '../context/AppContext';
-import { ArrowLeft, Camera, Trash2 } from 'lucide-react-native';
+import { ArrowLeft, Camera, Trash2, CheckCircle2 } from 'lucide-react-native';
 
 const EditPet = () => {
   const router = useRouter();
@@ -17,6 +17,9 @@ const EditPet = () => {
     age: '',
     image: '',
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [successType, setSuccessType] = useState<'updated' | 'deleted'>('updated');
 
   useEffect(() => {
     const pet = pets.find(p => p.id === id);
@@ -37,14 +40,22 @@ const EditPet = () => {
       return;
     }
 
-    updatePet(id!, {
-      ...form,
-      age: parseInt(form.age),
-    });
+    setIsSaving(true);
+    
+    setTimeout(() => {
+      updatePet(id!, {
+        ...form,
+        age: parseInt(form.age),
+      });
+      
+      setIsSaving(false);
+      setSuccessType('updated');
+      setIsSuccess(true);
 
-    Alert.alert('Success', 'Pet updated successfully!', [
-      { text: 'OK', onPress: () => router.back() }
-    ]);
+      setTimeout(() => {
+        router.push('/pets');
+      }, 1500);
+    }, 1000);
   };
 
   const handleDelete = () => {
@@ -57,8 +68,16 @@ const EditPet = () => {
           text: 'Delete', 
           style: 'destructive',
           onPress: () => {
-            deletePet(id!);
-            router.back();
+            setIsSaving(true);
+            setTimeout(() => {
+              deletePet(id!);
+              setIsSaving(false);
+              setSuccessType('deleted');
+              setIsSuccess(true);
+              setTimeout(() => {
+                router.push('/pets');
+              }, 1500);
+            }, 1000);
           }
         }
       ]
@@ -154,6 +173,31 @@ const EditPet = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* Saving Overlay */}
+      {isSaving && (
+        <View style={styles.overlay}>
+          <View style={styles.overlayContent}>
+            <ActivityIndicator size="large" color="#48d877" />
+            <Text style={styles.overlayText}>
+              {successType === 'deleted' ? 'Removing pet...' : 'Saving changes...'}
+            </Text>
+          </View>
+        </View>
+      )}
+
+      {/* Success Overlay */}
+      {isSuccess && (
+        <View style={styles.overlay}>
+          <View style={styles.overlayContent}>
+            <CheckCircle2 size={64} color={successType === 'deleted' ? '#ef4444' : '#48d877'} />
+            <Text style={styles.overlayText}>
+              {successType === 'deleted' ? 'Pet Removed' : 'Changes Saved!'}
+            </Text>
+            <Text style={styles.subOverlayText}>Returning to your pet list...</Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -284,6 +328,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  overlayContent: {
+    alignItems: 'center',
+    gap: 16,
+  },
+  overlayText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#0f172a',
+  },
+  subOverlayText: {
+    fontSize: 14,
+    color: '#64748b',
   },
   saveBtnText: {
     fontSize: 16,

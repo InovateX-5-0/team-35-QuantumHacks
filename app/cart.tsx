@@ -1,19 +1,40 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ChevronLeft, Trash2, ShoppingBag } from 'lucide-react-native';
+import { ChevronLeft, Trash2, ShoppingBag, Plus, Minus } from 'lucide-react-native';
+import { useApp } from '../context/AppContext';
 
 const Cart = () => {
   const router = useRouter();
+  const { cart, updateCartQuantity, removeFromCart, clearCart } = useApp();
   
-  const cartItems = [
-    { id: 1, name: 'Premium Puppy Food', price: 45.99, qty: 1, image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200' },
-    { id: 2, name: 'Squeaky Toy Bone', price: 12.50, qty: 2, image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=200' }
-  ];
-
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
+
+  if (cart.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+            <ChevronLeft size={24} color="#0f172a" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Shopping Cart</Text>
+          <View style={{ width: 40 }} />
+        </View>
+        <View style={styles.emptyContainer}>
+          <ShoppingBag size={64} color="#e2e8f0" />
+          <Text style={styles.emptyText}>Your cart is empty</Text>
+          <TouchableOpacity 
+            style={styles.shopBtn} 
+            onPress={() => router.push('/marketplace')}
+          >
+            <Text style={styles.shopBtnText}>Go Shopping</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -22,20 +43,36 @@ const Cart = () => {
           <ChevronLeft size={24} color="#0f172a" />
         </TouchableOpacity>
         <Text style={styles.title}>Shopping Cart</Text>
-        <View style={{ width: 40 }} />
+        <TouchableOpacity onPress={clearCart}>
+          <Trash2 size={20} color="#64748b" />
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.content}>
-        {cartItems.map((item) => (
+        {cart.map((item) => (
           <View key={item.id} style={styles.cartItem}>
-            <Image source={{ uri: item.image }} style={styles.itemImage} />
+            <Image source={{ uri: item.image }} style={styles.itemImage} resizeMode="contain" />
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>{item.name}</Text>
               <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
               <View style={styles.qtyRow}>
-                <Text style={styles.qtyText}>Qty: {item.qty}</Text>
-                <TouchableOpacity>
-                  <Trash2 size={16} color="#ef4444" />
+                <View style={styles.qtyControls}>
+                  <TouchableOpacity 
+                    onPress={() => updateCartQuantity(item.id, item.quantity - 1)}
+                    style={styles.qtyAction}
+                  >
+                    <Text style={styles.qtyActionText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qtyText}>{item.quantity}</Text>
+                  <TouchableOpacity 
+                    onPress={() => updateCartQuantity(item.id, item.quantity + 1)}
+                    style={styles.qtyAction}
+                  >
+                    <Text style={styles.qtyActionText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                  <Trash2 size={18} color="#ef4444" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -87,7 +124,14 @@ const styles = StyleSheet.create({
   totalLabel: { fontSize: 16, fontWeight: 'bold', color: '#0f172a' },
   totalValue: { fontSize: 18, fontWeight: 'bold', color: '#48d877' },
   checkoutBtn: { backgroundColor: '#48d877', flexDirection: 'row', height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginTop: 32 },
-  checkoutBtnText: { color: '#ffffff', fontSize: 18, fontWeight: 'bold' }
+  checkoutBtnText: { color: '#ffffff', fontSize: 18, fontWeight: 'bold' },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },
+  emptyText: { fontSize: 18, color: '#64748b', marginTop: 16, marginBottom: 24 },
+  shopBtn: { backgroundColor: '#48d877', paddingHorizontal: 32, paddingVertical: 14, borderRadius: 12 },
+  shopBtnText: { color: '#ffffff', fontWeight: 'bold' },
+  qtyControls: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f8fafc', borderRadius: 8, padding: 2 },
+  qtyAction: { width: 28, height: 28, justifyContent: 'center', alignItems: 'center' },
+  qtyActionText: { fontSize: 18, fontWeight: 'bold', color: '#0f172a' },
 });
 
 export default Cart;

@@ -14,6 +14,8 @@ const Profile = () => {
   const [editForm, setEditForm] = React.useState({
     name: user?.name || '',
     email: user?.email || '',
+    phone: user?.phone || '',
+    location: user?.location || '',
   });
 
   const handleUpdateProfile = () => {
@@ -50,7 +52,12 @@ const Profile = () => {
           <TouchableOpacity 
             style={styles.editProfileBtn}
             onPress={() => {
-              setEditForm({ name: user?.name || '', email: user?.email || '' });
+              setEditForm({ 
+                name: user?.name || '', 
+                email: user?.email || '',
+                phone: user?.phone || '',
+                location: user?.location || ''
+              });
               setEditModalVisible(true);
             }}
           >
@@ -74,7 +81,7 @@ const Profile = () => {
               <Phone size={20} color="#64748b" />
               <View style={styles.infoContent}>
                 <Text style={styles.infoLabel}>Phone</Text>
-                <Text style={styles.infoValue}>+1 (555) 123-4567</Text>
+                <Text style={styles.infoValue}>{user?.phone || 'Not set'}</Text>
               </View>
             </View>
             <View style={styles.divider} />
@@ -82,7 +89,7 @@ const Profile = () => {
               <MapPin size={20} color="#64748b" />
               <View style={styles.infoContent}>
                 <Text style={styles.infoLabel}>Location</Text>
-                <Text style={styles.infoValue}>San Francisco, CA</Text>
+                <Text style={styles.infoValue}>{user?.location || 'Not set'}</Text>
               </View>
             </View>
           </View>
@@ -95,7 +102,10 @@ const Profile = () => {
             <TouchableOpacity 
               key={index} 
               style={styles.menuItem}
-              onPress={() => Alert.alert(item.label, `${item.label} settings will be implemented soon!`)}
+              onPress={() => router.push({
+                pathname: '/settings',
+                params: { type: item.label }
+              })}
             >
               <View style={[styles.menuIcon, { backgroundColor: item.color + '20' }]}>
                 <item.icon size={20} color={item.color} />
@@ -150,6 +160,27 @@ const Profile = () => {
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.inputLabel}>Phone Number</Text>
+              <TextInput
+                style={styles.input}
+                value={editForm.phone}
+                onChangeText={(text) => setEditForm({ ...editForm, phone: text })}
+                placeholder="Enter your phone"
+                keyboardType="phone-pad"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.inputLabel}>Location</Text>
+              <TextInput
+                style={styles.input}
+                value={editForm.location}
+                onChangeText={(text) => setEditForm({ ...editForm, location: text })}
+                placeholder="Enter your location"
               />
             </View>
 

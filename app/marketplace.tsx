@@ -24,9 +24,21 @@ const Marketplace = () => {
         </View>
 
         <View style={styles.grid}>
-          {MOCK_PRODUCTS.map((product) => (
-            <Link key={product.id} href="/cart" asChild>
-              <TouchableOpacity style={styles.productCard}>
+          {MOCK_PRODUCTS.map((product, index) => (
+            <Link 
+              key={product.id} 
+              href={{
+                pathname: "/product/[id]",
+                params: { id: product.id }
+              }}
+              asChild
+            >
+              <TouchableOpacity
+                style={{
+                  ...styles.productCard,
+                  ...(index % 2 === 0 ? { marginRight: 8 } : { marginLeft: 8 })
+                }}
+              >
                 <Image source={{ uri: product.image }} style={styles.productImage} />
                 <View style={styles.productInfo}>
                   <Text style={styles.productCategory}>{product.category}</Text>

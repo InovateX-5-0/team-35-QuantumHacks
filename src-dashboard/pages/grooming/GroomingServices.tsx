@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Scissors, Clock, DollarSign, Plus, Settings2, X } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 import { mockData } from '../../data/mockData';
 
 export function GroomingServices() {
@@ -11,12 +12,15 @@ export function GroomingServices() {
     price: '',
   });
 
+  const { toast } = useToast();
+
   const handleAddService = (e: React.FormEvent) => {
     e.preventDefault();
     const id = (services.length + 1).toString();
     setServices([...services, { ...newService, id, price: Number(newService.price) }]);
     setIsModalOpen(false);
     setNewService({ name: '', duration: '', price: '' });
+    toast('Service added successfully!', 'success');
   };
 
   return (
