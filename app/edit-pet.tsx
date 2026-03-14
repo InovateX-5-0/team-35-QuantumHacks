@@ -123,7 +123,7 @@ const EditPet = () => {
                   ]}>{type}</Text>
                 </TouchableOpacity>
               ))}
-            </div>
+            </View>
           </View>
 
           <View style={styles.inputGroup}>
