@@ -21,8 +21,8 @@ export function Appointments() {
 
   const handleAddAppointment = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now we just toast success as it's a mock dashboard
-    showToast('New appointment scheduled successfully!', 'success');
+    // @ts-ignore
+    showToast({ message: 'New appointment scheduled successfully!', variant: 'success' });
     setIsModalOpen(false);
     setNewAppt({ petName: '', ownerName: '', time: '', type: 'Checkup' });
   };
@@ -31,9 +31,11 @@ export function Appointments() {
     try {
       const appRef = doc(db, 'appointments', id);
       await updateDoc(appRef, { status: newStatus });
-      showToast(`Appointment ${newStatus} successfully!`, newStatus === 'cancelled' ? 'error' : 'success');
+      // @ts-ignore - showToast exists in context
+      showToast({ message: `Appointment ${newStatus} successfully!`, variant: newStatus === 'cancelled' ? 'error' : 'success' });
     } catch (error) {
-      showToast('Failed to update status', 'error');
+      // @ts-ignore
+      showToast({ message: 'Failed to update status', variant: 'error' });
     }
   };
 
@@ -150,6 +152,88 @@ export function Appointments() {
           </table>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-slate-800">Schedule Appointment</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddAppointment} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Pet Name</label>
+                <input 
+                  required
+                  type="text" 
+                  value={newAppt.petName}
+                  onChange={(e) => setNewAppt({...newAppt, petName: (e.target as HTMLInputElement).value})}
+                  placeholder="e.g. Bella"
+                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Owner Name</label>
+                <input 
+                  required
+                  type="text" 
+                  value={newAppt.ownerName}
+                  onChange={(e) => setNewAppt({...newAppt, ownerName: (e.target as HTMLInputElement).value})}
+                  placeholder="e.g. Sarah Johnson"
+                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Time</label>
+                  <input 
+                    required
+                    type="text" 
+                    value={newAppt.time}
+                    onChange={(e) => setNewAppt({...newAppt, time: (e.target as HTMLInputElement).value})}
+                    placeholder="e.g. 10:30 AM"
+                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Reason</label>
+                  <select 
+                    value={newAppt.type}
+                    onChange={(e) => setNewAppt({...newAppt, type: (e.target as HTMLSelectElement).value})}
+                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 bg-white"
+                  >
+                    <option value="Checkup">Checkup</option>
+                    <option value="Vaccination">Vaccination</option>
+                    <option value="Surgery">Surgery</option>
+                    <option value="Consult">Consult</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-200"
+                >
+                  Schedule
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

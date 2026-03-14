@@ -1,10 +1,12 @@
+import React, { useState } from 'react';
+import { Badge } from '../../components/ui/Badge';
 import { Calendar, Clock, User, Plus, X } from 'lucide-react';
 import { mockData } from '../../data/mockData';
 
 export function TrainingClasses() {
-  const [classes, setClasses] = React.useState(mockData.training.classes);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [newClass, setNewClass] = React.useState({
+  const [classes, setClasses] = useState(mockData.training.classes);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newClass, setNewClass] = useState({
     name: '',
     time: '',
     trainer: '',
@@ -85,7 +87,7 @@ export function TrainingClasses() {
                    required
                    type="text" 
                    value={newClass.name}
-                   onChange={(e) => setNewClass({...newClass, name: e.target.value})}
+                   onChange={(e) => setNewClass({...newClass, name: (e.target as HTMLInputElement).value})}
                    placeholder="e.g. Advanced Obedience"
                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                  />
@@ -97,7 +99,7 @@ export function TrainingClasses() {
                    required
                    type="text" 
                    value={newClass.time}
-                   onChange={(e) => setNewClass({...newClass, time: e.target.value})}
+                   onChange={(e) => setNewClass({...newClass, time: (e.target as HTMLInputElement).value})}
                    placeholder="e.g. Weekends 10 AM"
                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                  />
@@ -109,7 +111,7 @@ export function TrainingClasses() {
                    required
                    type="text" 
                    value={newClass.trainer}
-                   onChange={(e) => setNewClass({...newClass, trainer: e.target.value})}
+                   onChange={(e) => setNewClass({...newClass, trainer: (e.target as HTMLInputElement).value})}
                    placeholder="e.g. Dr. Sarah Bark"
                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                  />

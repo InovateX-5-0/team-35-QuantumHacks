@@ -1,9 +1,25 @@
-import React from 'react';
-import { MapPin, Star, MessageSquare, Plus, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Star, MessageSquare, Plus, Search, X } from 'lucide-react';
 import { mockData } from '../../data/mockData';
 
 export function ParkDirectory() {
-  const { directory, reviews } = mockData.parks;
+  const [directory, setDirectory] = useState(mockData.parks.directory);
+  const { reviews } = mockData.parks;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newPark, setNewPark] = useState({
+    name: '',
+    location: '',
+    status: 'Open',
+    type: 'Dog',
+  });
+
+  const handleAddPark = (e: React.FormEvent) => {
+    e.preventDefault();
+    const id = (directory.length + 1).toString();
+    setDirectory([...directory, { ...newPark, id, rating: 5.0, reviews: 0 }]);
+    setIsModalOpen(false);
+    setNewPark({ name: '', location: '', status: 'Open', type: 'Dog' });
+  };
 
   return (
     <div className="space-y-8">
@@ -14,7 +30,10 @@ export function ParkDirectory() {
             <h1 className="text-2xl font-bold text-slate-800">Park Directory</h1>
             <p className="text-slate-500">Manage facility locations and status.</p>
           </div>
-          <button className="bg-emerald-600 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200">
+           <button 
+             onClick={() => setIsModalOpen(true)}
+             className="bg-emerald-600 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
+           >
             <Plus size={20} /> Add Park
           </button>
         </div>

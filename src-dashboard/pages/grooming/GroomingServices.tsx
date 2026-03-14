@@ -1,10 +1,11 @@
+import React, { useState } from 'react';
 import { Scissors, Clock, DollarSign, Plus, Settings2, X } from 'lucide-react';
 import { mockData } from '../../data/mockData';
 
 export function GroomingServices() {
-  const [services, setServices] = React.useState(mockData.grooming.services);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [newService, setNewService] = React.useState({
+  const [services, setServices] = useState(mockData.grooming.services);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newService, setNewService] = useState({
     name: '',
     duration: '',
     price: '',
@@ -82,7 +83,7 @@ export function GroomingServices() {
                    required
                    type="text" 
                    value={newService.name}
-                   onChange={(e) => setNewService({...newService, name: e.target.value})}
+                   onChange={(e) => setNewService({...newService, name: (e.target as HTMLInputElement).value})}
                    placeholder="e.g. Full Grooming"
                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500"
                  />
@@ -95,7 +96,7 @@ export function GroomingServices() {
                      required
                      type="text" 
                      value={newService.duration}
-                     onChange={(e) => setNewService({...newService, duration: e.target.value})}
+                     onChange={(e) => setNewService({...newService, duration: (e.target as HTMLInputElement).value})}
                      placeholder="e.g. 60-90 min"
                      className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500"
                    />
@@ -106,7 +107,7 @@ export function GroomingServices() {
                      required
                      type="number" 
                      value={newService.price}
-                     onChange={(e) => setNewService({...newService, price: e.target.value})}
+                     onChange={(e) => setNewService({...newService, price: (e.target as HTMLInputElement).value})}
                      placeholder="e.g. 50"
                      className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500"
                    />
