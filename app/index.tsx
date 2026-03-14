@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useApp } from '../context/AppContext';
-import { Link } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
 import { Calendar, Bell, ShieldAlert, Stethoscope, Heart, Users, MapPin, ShoppingBag, Scissors, ChevronRight, TreePine, GraduationCap } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
 const Home = () => {
   const { user, appointments, pets } = useApp();
+  const router = useRouter();
 
   const quickActions = [
     { icon: Stethoscope, label: 'Vets', color: '#ccfbf1', iconColor: '#0d9488', href: '/vets' },
@@ -21,6 +22,11 @@ const Home = () => {
 
   const upcomingApp = appointments.find(a => a.status === 'Upcoming');
 
+  const handleNavigate = (href: string) => {
+    console.log('[DEBUG] Home navigating to:', href);
+    router.push(href as any);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -30,38 +36,32 @@ const Home = () => {
             <Text style={styles.welcomeText}>Welcome back,</Text>
             <Text style={styles.userName}>{user?.name || 'Pet Owner'} 👋</Text>
           </View>
-          <Link href="/notifications" asChild>
-            <TouchableOpacity style={styles.notificationBtn}>
-              <Bell size={24} color="#475569" />
-              <View style={styles.badge} />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity style={styles.notificationBtn} onPress={() => handleNavigate('/notifications')}>
+            <Bell size={24} color="#475569" />
+            <View style={styles.badge} />
+          </TouchableOpacity>
         </View>
 
         {/* SOS Button */}
-        <Link href="/sos" asChild>
-          <TouchableOpacity style={styles.sosCard}>
-            <View style={styles.sosIcon}>
-              <ShieldAlert size={32} color="#e11d48" />
-            </View>
-            <View>
-              <Text style={styles.sosTitle}>Emergency SOS</Text>
-              <Text style={styles.sosSubtitle}>Find nearest emergency vet clinics instantly</Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.sosCard} onPress={() => handleNavigate('/sos')}>
+          <View style={styles.sosIcon}>
+            <ShieldAlert size={32} color="#e11d48" />
+          </View>
+          <View>
+            <Text style={styles.sosTitle}>Emergency SOS</Text>
+            <Text style={styles.sosSubtitle}>Find nearest emergency vet clinics instantly</Text>
+          </View>
+        </TouchableOpacity>
 
         {/* Quick Actions */}
         <View style={styles.quickActionsGrid}>
           {quickActions.map((action, i) => (
-            <Link key={i} href={action.href} asChild>
-              <TouchableOpacity style={styles.actionBtn}>
-                <View style={[styles.actionIcon, { backgroundColor: action.color }]}>
-                  <action.icon size={24} color={action.iconColor} />
-                </View>
-                <Text style={styles.actionLabel}>{action.label}</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity key={i} style={styles.actionBtn} onPress={() => handleNavigate(action.href)}>
+              <View style={[styles.actionIcon, { backgroundColor: action.color }]}>
+                <action.icon size={24} color={action.iconColor} />
+              </View>
+              <Text style={styles.actionLabel}>{action.label}</Text>
+            </TouchableOpacity>
           ))}
         </View>
 
@@ -69,13 +69,13 @@ const Home = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
-            <Link href="/pets">
+            <TouchableOpacity onPress={() => handleNavigate('/pets')}>
               <Text style={styles.seeAll}>View All</Text>
-            </Link>
+            </TouchableOpacity>
           </View>
           <View style={styles.appointmentCard}>
             {upcomingApp ? (
-              <View>
+              <TouchableOpacity onPress={() => handleNavigate('/pets')}>
                 <View style={styles.appointmentHeader}>
                   <View style={styles.appointmentInfo}>
                     <View style={styles.calendarIconWrapper}>
@@ -99,7 +99,7 @@ const Home = () => {
                   <Text style={styles.petName}>For {pets.find(p => p.id === upcomingApp.petId)?.name || 'your pet'}</Text>
                   <ChevronRight size={20} color="#064e3b80" />
                 </View>
-              </View>
+              </TouchableOpacity>
             ) : (
               <View style={styles.noAppointment}>
                 <View style={styles.noApptIcon}>
@@ -107,11 +107,9 @@ const Home = () => {
                 </View>
                 <Text style={styles.noApptTitle}>No upcoming appointments</Text>
                 <Text style={styles.noApptSubtitle}>Keep your pet healthy with regular checkups</Text>
-                <Link href="/explore" asChild>
-                  <TouchableOpacity style={styles.bookNowBtn}>
-                    <Text style={styles.bookNowText}>Book Now</Text>
-                  </TouchableOpacity>
-                </Link>
+                <TouchableOpacity style={styles.bookNowBtn} onPress={() => handleNavigate('/explore')}>
+                  <Text style={styles.bookNowText}>Book Now</Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -128,11 +126,9 @@ const Home = () => {
               <Text style={styles.alertTitle}>Vaccination Due</Text>
               <Text style={styles.alertSubtitle}>Rabies shot for Bella is due in 3 days.</Text>
             </View>
-            <Link href="/notifications" asChild>
-              <TouchableOpacity>
-                <Text style={styles.detailsBtn}>Details</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity onPress={() => handleNavigate('/notifications')}>
+              <Text style={styles.detailsBtn}>Details</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -140,35 +136,31 @@ const Home = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recommended for You</Text>
-            <Link href="/marketplace">
+            <TouchableOpacity onPress={() => handleNavigate('/marketplace')}>
               <Text style={styles.seeAll}>See All</Text>
-            </Link>
+            </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-            <Link href="/marketplace" asChild>
-              <TouchableOpacity style={styles.productCard}>
-                <Image 
-                  source={{ uri: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200' }}
-                  style={styles.productImage}
-                />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productName} numberOfLines={1}>Premium Puppy Food</Text>
-                  <Text style={styles.productPrice}>$45.99</Text>
-                </View>
-              </TouchableOpacity>
-            </Link>
-            <Link href="/marketplace" asChild>
-              <TouchableOpacity style={styles.productCard}>
-                <Image 
-                  source={{ uri: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=200' }}
-                  style={styles.productImage}
-                />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productName} numberOfLines={1}>Orthopedic Dog Bed</Text>
-                  <Text style={styles.productPrice}>$89.00</Text>
-                </View>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity style={styles.productCard} onPress={() => handleNavigate('/marketplace')}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200' }}
+                style={styles.productImage}
+              />
+              <View style={styles.productInfo}>
+                <Text style={styles.productName} numberOfLines={1}>Premium Puppy Food</Text>
+                <Text style={styles.productPrice}>$45.99</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.productCard} onPress={() => handleNavigate('/marketplace')}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=200' }}
+                style={styles.productImage}
+              />
+              <View style={styles.productInfo}>
+                <Text style={styles.productName} numberOfLines={1}>Orthopedic Dog Bed</Text>
+                <Text style={styles.productPrice}>$89.00</Text>
+              </View>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 

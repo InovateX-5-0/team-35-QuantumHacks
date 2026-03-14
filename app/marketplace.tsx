@@ -1,61 +1,61 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ChevronLeft, ShoppingCart, Star } from 'lucide-react-native';
 import { MOCK_PRODUCTS } from '../src/data/mockData';
 import BottomTab from '../components/Navigation';
 
 const Marketplace = () => {
+  const router = useRouter();
+
+  const handleBack = () => router.back();
+  const handleCart = () => router.push('/cart');
+  const handleProduct = (id: string) => {
+    router.push({
+      pathname: "/product/[id]",
+      params: { id }
+    });
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Link href="/" asChild>
-            <TouchableOpacity style={styles.backBtn}>
-              <ChevronLeft size={24} color="#0f172a" />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
+            <ChevronLeft size={24} color="#0f172a" />
+          </TouchableOpacity>
           <Text style={styles.title}>Marketplace</Text>
-          <Link href="/cart" asChild>
-            <TouchableOpacity style={styles.cartBtn}>
-              <ShoppingCart size={24} color="#0f172a" />
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity style={styles.cartBtn} onPress={handleCart}>
+            <ShoppingCart size={24} color="#0f172a" />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.grid}>
           {MOCK_PRODUCTS.map((product, index) => (
-            <Link 
-              key={product.id} 
-              href={{
-                pathname: "/product/[id]",
-                params: { id: product.id }
-              }}
-              asChild
+            <TouchableOpacity
+              key={product.id}
+              style={[
+                styles.productCard,
+                index % 2 === 0 ? { marginRight: 8 } : { marginLeft: 8 }
+              ]}
+              onPress={() => handleProduct(product.id)}
             >
-              <TouchableOpacity
-                style={[
-                  styles.productCard,
-                  index % 2 === 0 ? { marginRight: 8 } : { marginLeft: 8 }
-                ]}
-              >
-                <Image source={{ uri: product.image }} style={styles.productImage} />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productCategory}>{product.category}</Text>
-                  <Text style={styles.productName} numberOfLines={1}>{product.name}</Text>
-                  <View style={styles.ratingRow}>
-                    <Star size={12} color="#fbbf24" fill="#fbbf24" />
-                    <Text style={styles.ratingText}>{product.rating}</Text>
-                  </View>
-                  <View style={styles.footer}>
-                    <Text style={styles.productPrice}>${product.price.toFixed(2)}</Text>
-                    <View style={styles.addBtn}>
-                      <Text style={styles.addBtnText}>Add</Text>
-                    </View>
+              <Image source={{ uri: product.image }} style={styles.productImage} />
+              <View style={styles.productInfo}>
+                <Text style={styles.productCategory}>{product.category}</Text>
+                <Text style={styles.productName} numberOfLines={1}>{product.name}</Text>
+                <View style={styles.ratingRow}>
+                  <Star size={12} color="#fbbf24" fill="#fbbf24" />
+                  <Text style={styles.ratingText}>{product.rating}</Text>
+                </View>
+                <View style={styles.footer}>
+                  <Text style={styles.productPrice}>${product.price.toFixed(2)}</Text>
+                  <View style={styles.addBtn}>
+                    <Text style={styles.addBtnText}>Add</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
-            </Link>
+              </View>
+            </TouchableOpacity>
           ))}
         </View>
 
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 2,
   },
   cartBtn: {
     width: 40,
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 2,
   },
   title: {
     fontSize: 20,
