@@ -47,6 +47,10 @@ interface AppContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
+  addPet: (pet: Omit<Pet, 'id'>) => void;
+  updatePet: (id: string, petData: Partial<Pet>) => void;
+  deletePet: (id: string) => void;
   addAdoptionApplication: (app: AdoptionApplication) => Promise<void>;
 }
 
@@ -62,12 +66,12 @@ export const useApp = () => {
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [user] = useState<User>({
+  const [user, setUser] = useState<User | null>({
     id: '1',
     name: 'Pet Owner',
     email: 'owner@petcare.com',
   });
-  const [pets] = useState<Pet[]>([
+  const [pets, setPets] = useState<Pet[]>([
     {
       id: '1',
       name: 'Bella',
@@ -102,6 +106,23 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const login = () => setIsLoggedIn(true);
   const logout = () => setIsLoggedIn(false);
 
+  const updateUser = (userData: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...userData } : null);
+  };
+
+  const addPet = (pet: Omit<Pet, 'id'>) => {
+    const newPet = { ...pet, id: Math.random().toString(36).substr(2, 9) };
+    setPets(prev => [...prev, newPet]);
+  };
+
+  const updatePet = (id: string, petData: Partial<Pet>) => {
+    setPets(prev => prev.map(pet => pet.id === id ? { ...pet, ...petData } : pet));
+  };
+
+  const deletePet = (id: string) => {
+    setPets(prev => prev.filter(pet => pet.id !== id));
+  };
+
   const addAdoptionApplication = async (app: AdoptionApplication) => {
     setApplications(prev => [...prev, app]);
     console.log('Adoption application submitted:', app);
@@ -116,6 +137,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       isLoggedIn, 
       login, 
       logout,
+      updateUser,
+      addPet,
+      updatePet,
+      deletePet,
       addAdoptionApplication 
     }}>
       {children}

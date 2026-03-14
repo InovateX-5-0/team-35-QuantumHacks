@@ -4,9 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
 import { User, Mail, Phone, MapPin, Settings, Bell, Shield, HelpCircle, LogOut, ChevronRight } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { Alert } from 'react-native';
 
 const Profile = () => {
   const { user, logout } = useApp();
+  const router = useRouter();
 
   const menuItems = [
     { icon: Settings, label: 'Account Settings', color: '#48d877' },
@@ -33,7 +36,10 @@ const Profile = () => {
           </View>
           <Text style={styles.userName}>{user?.name || 'Pet Owner'}</Text>
           <Text style={styles.userEmail}>{user?.email || 'owner@petcare.com'}</Text>
-          <TouchableOpacity style={styles.editProfileBtn}>
+          <TouchableOpacity 
+            style={styles.editProfileBtn}
+            onPress={() => Alert.alert('Edit Profile', 'Functionality coming soon!')}
+          >
             <Text style={styles.editProfileText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -72,7 +78,11 @@ const Profile = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Settings</Text>
           {menuItems.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.menuItem}>
+            <TouchableOpacity 
+              key={index} 
+              style={styles.menuItem}
+              onPress={() => Alert.alert(item.label, `${item.label} settings will be implemented soon!`)}
+            >
               <View style={[styles.menuIcon, { backgroundColor: item.color + '20' }]}>
                 <item.icon size={20} color={item.color} />
               </View>

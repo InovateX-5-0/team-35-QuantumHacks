@@ -4,9 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
 import { Plus, Calendar, Syringe } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 const Pets = () => {
   const { pets, appointments } = useApp();
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -18,7 +20,10 @@ const Pets = () => {
         </View>
 
         {/* Add Pet Button */}
-        <TouchableOpacity style={styles.addPetBtn}>
+        <TouchableOpacity 
+          style={styles.addPetBtn}
+          onPress={() => router.push('/add-pet')}
+        >
           <Plus size={24} color="#ffffff" />
           <Text style={styles.addPetText}>Add New Pet</Text>
         </TouchableOpacity>
@@ -57,7 +62,10 @@ const Pets = () => {
                       <Syringe size={16} color="#48d877" />
                       <Text style={styles.actionText}>Vaccination</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.actionBtn, styles.secondaryBtn]}>
+                    <TouchableOpacity 
+                      style={[styles.actionBtn, styles.secondaryBtn]}
+                      onPress={() => router.push({ pathname: '/edit-pet', params: { id: pet.id } })}
+                    >
                       <Text style={[styles.actionText, styles.secondaryText]}>Edit Profile</Text>
                     </TouchableOpacity>
                   </View>
