@@ -188,7 +188,7 @@ const Community = () => {
                   />
                   <Text style={[
                     styles.actionCount,
-                    post.isLiked && { color: '#ef4444' }
+                    post.isLiked && styles.activeActionText
                   ]}>{post.likes}</Text>
                 </TouchableOpacity>
 
@@ -451,6 +451,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  activeActionText: {
+    color: '#ef4444',
+  }
 });
 
 export default Community;

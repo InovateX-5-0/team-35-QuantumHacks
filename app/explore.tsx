@@ -72,6 +72,14 @@ export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('services');
 
+  console.log('[DEBUG] Explore page rendering, activeTab:', activeTab);
+    
+  // Safety check for categories
+  if (!categories || categories.length === 0) {
+      console.error('[DEBUG] categories is empty or undefined');
+      return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading categories...</Text></View>;
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>

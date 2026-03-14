@@ -34,10 +34,10 @@ const Marketplace = () => {
               asChild
             >
               <TouchableOpacity
-                style={{
-                  ...styles.productCard,
-                  ...(index % 2 === 0 ? { marginRight: 8 } : { marginLeft: 8 })
-                }}
+                style={[
+                  styles.productCard,
+                  index % 2 === 0 ? { marginRight: 8 } : { marginLeft: 8 }
+                ]}
               >
                 <Image source={{ uri: product.image }} style={styles.productImage} />
                 <View style={styles.productInfo}>
