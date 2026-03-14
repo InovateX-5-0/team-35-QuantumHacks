@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { usePathname, useRouter } from 'expo-router';
-import { Home, User, Search, Users, PawPrint } from 'lucide-react-native';
+import { Home, User, Users, PawPrint } from 'lucide-react-native';
 
 const BottomTab = () => {
   const pathname = usePathname();
@@ -22,11 +22,6 @@ const BottomTab = () => {
       <TouchableOpacity style={styles.tab} onPress={() => handlePress('/pets')}>
         <PawPrint size={22} color={pathname === '/pets' ? '#48d877' : '#94a3b8'} />
         <Text style={[styles.label, pathname === '/pets' && { color: '#48d877' }]}>Pets</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.tab} onPress={() => handlePress('/explore')}>
-        <Search size={22} color={pathname.startsWith('/explore') ? '#48d877' : '#94a3b8'} />
-        <Text style={[styles.label, pathname.startsWith('/explore') && { color: '#48d877' }]}>Explore</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.tab} onPress={() => handlePress('/community')}>
