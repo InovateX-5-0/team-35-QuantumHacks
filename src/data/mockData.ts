@@ -89,7 +89,7 @@ export const MOCK_ADOPTION_PETS = [
     breed: 'Beagle',
     age: '1 year',
     location: 'Manhattan, NY',
-    image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&q=80&w=400',
     shelter: 'Manhattan Pet Rescue',
     description: 'Bella is a sweet Beagle who loves long walks and sniffing out new adventures.',
     adoptionFee: 200,
@@ -101,10 +101,10 @@ export const MOCK_ADOPTION_PETS = [
     id: 'a4',
     name: 'Mochi',
     species: 'Cat',
-    breed: 'Sippese',
+    breed: 'Siamese',
     age: '3 years',
     location: 'Staten Island, NY',
-    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1513245535761-07747efbd661?auto=format&fit=crop&q=80&w=400',
     shelter: 'Island Cat Rescue',
     description: 'Mochi is a calm and affectionate Siamese cat who enjoys quiet afternoons.',
     adoptionFee: 80,
@@ -132,7 +132,7 @@ export const MOCK_POSTS = [
     authorImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100',
     petName: 'Whiskers',
     content: 'New scratching post is a hit! 🐱',
-    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1554692998-0d26ff83f34e?auto=format&fit=crop&q=80&w=400',
     likes: 42,
     comments: 8,
     time: '5h ago'
@@ -177,7 +177,7 @@ export const MOCK_PRODUCTS = [
     price: 89.00,
     category: 'Accessories',
     rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1541599624620-fd5c98b8c654?auto=format&fit=crop&q=80&w=400',
     description: 'Slow-recovery memory foam for ultimate comfort.'
   },
   {
@@ -186,7 +186,7 @@ export const MOCK_PRODUCTS = [
     price: 15.50,
     category: 'Toys',
     rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1513245535761-07747efbd661?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&q=80&w=400',
     description: 'Keeps your cat active and entertained for hours.'
   },
   {
@@ -195,7 +195,7 @@ export const MOCK_PRODUCTS = [
     price: 120.00,
     category: 'Tech',
     rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=400',
     description: 'Schedule meals even when you are away.'
   }
 ];

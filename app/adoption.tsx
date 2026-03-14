@@ -12,6 +12,7 @@ const Adoption = () => {
   const [selectedPet, setSelectedPet] = useState<any>(null);
   const [filter, setFilter] = useState('All');
   const [isApplying, setIsApplying] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     experience: 'First-time owner',
     homeType: 'Apartment',
@@ -44,6 +45,13 @@ const Adoption = () => {
       });
       setIsApplying(false);
       setSelectedPet(null);
+      setFormData({ experience: 'First-time owner', homeType: 'Apartment', message: '' });
+      setIsSuccess(true);
+      
+      // Auto-hide success after 2 seconds
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
     } catch (error) {
       console.error(error);
       setIsApplying(false);
@@ -190,6 +198,17 @@ const Adoption = () => {
       </Modal>
 
       <BottomTab />
+      
+      {/* Adoption Success Overlay */}
+      {isSuccess && (
+        <View style={styles.successOverlay}>
+          <View style={styles.successContent}>
+            <CheckCircle2 size={64} color="#48d877" />
+            <Text style={styles.successTitle}>Application Submitted!</Text>
+            <Text style={styles.successSubtitle}>The shelter will contact you soon.</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -490,6 +509,29 @@ const styles = StyleSheet.create({
   submitText: {
       color: '#ffffff',
       fontWeight: 'bold',
+  },
+  successOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+  },
+  successContent: {
+    alignItems: 'center',
+    padding: 24,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#0f172a',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  successSubtitle: {
+    fontSize: 16,
+    color: '#64748b',
+    textAlign: 'center',
   }
 });
 

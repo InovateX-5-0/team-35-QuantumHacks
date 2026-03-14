@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ChevronLeft, Camera, MapPin, AlertCircle } from 'lucide-react-native';
+import { ChevronLeft, Camera, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react-native';
 
 const ReportPet = () => {
     const router = useRouter();
     const [status, setStatus] = useState('Lost');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleReport = () => {
-        Alert.alert('Reported', 'The pet has been added to the Lost & Found database.', [
-            { text: 'OK', onPress: () => router.back() }
-        ]);
+        setIsSuccess(true);
+        setTimeout(() => {
+            setIsSuccess(false);
+            router.back();
+        }, 2000);
     };
 
     return (
@@ -71,6 +74,17 @@ const ReportPet = () => {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+
+            {/* Success Overlay */}
+            {isSuccess && (
+                <View style={styles.successOverlay}>
+                    <View style={styles.successContent}>
+                        <CheckCircle2 size={64} color="#48d877" />
+                        <Text style={styles.successTitle}>Report Submitted!</Text>
+                        <Text style={styles.successSubtitle}>The pet has been added to the database.</Text>
+                    </View>
+                </View>
+            )}
         </View>
     );
 };
@@ -95,7 +109,30 @@ const styles = StyleSheet.create({
     input: { backgroundColor: '#ffffff', borderRadius: 12, padding: 16, fontSize: 16 },
     locationInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ffffff', borderRadius: 12, paddingLeft: 16 },
     submitBtn: { backgroundColor: '#ef4444', height: 56, borderRadius: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 40 },
-    submitText: { color: '#ffffff', fontSize: 16, fontWeight: 'bold' }
+    submitText: { color: '#ffffff', fontSize: 16, fontWeight: 'bold' },
+    successOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2000,
+    },
+    successContent: {
+        alignItems: 'center',
+        padding: 24,
+    },
+    successTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#0f172a',
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    successSubtitle: {
+        fontSize: 16,
+        color: '#64748b',
+        textAlign: 'center',
+    }
 });
 
 export default ReportPet;
