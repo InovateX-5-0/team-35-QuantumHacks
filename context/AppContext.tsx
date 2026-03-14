@@ -25,13 +25,29 @@ interface Appointment {
   type: string;
 }
 
+interface AdoptionApplication {
+  petId: string;
+  petName: string;
+  shelterId: string;
+  shelterName: string;
+  applicantName: string;
+  date: string;
+  status: string;
+  homeType: string;
+  experience: string;
+  message: string;
+  adoptionFee: number;
+}
+
 interface AppContextType {
   user: User | null;
   pets: Pet[];
   appointments: Appointment[];
+  applications: AdoptionApplication[];
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  addAdoptionApplication: (app: AdoptionApplication) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -81,11 +97,27 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     },
   ]);
 
+  const [applications, setApplications] = useState<AdoptionApplication[]>([]);
+
   const login = () => setIsLoggedIn(true);
   const logout = () => setIsLoggedIn(false);
 
+  const addAdoptionApplication = async (app: AdoptionApplication) => {
+    setApplications(prev => [...prev, app]);
+    console.log('Adoption application submitted:', app);
+  };
+
   return (
-    <AppContext.Provider value={{ user, pets, appointments, isLoggedIn, login, logout }}>
+    <AppContext.Provider value={{ 
+      user, 
+      pets, 
+      appointments, 
+      applications, 
+      isLoggedIn, 
+      login, 
+      logout,
+      addAdoptionApplication 
+    }}>
       {children}
     </AppContext.Provider>
   );

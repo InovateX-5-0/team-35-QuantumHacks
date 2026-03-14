@@ -7,7 +7,8 @@
     "icon": "./assets/icon.png",
     "scheme": "petcare",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "jsEngine": "hermes",
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",

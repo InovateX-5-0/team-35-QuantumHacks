@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { MOCK_ADOPTION_PETS } from '../data/mockData';
-import { Heart, Filter, Search, MapPin, Info, ChevronRight, X, CheckCircle2, Sparkles, DollarSign } from 'lucide-react';
+import { Heart, Filter, Search, MapPin, Info, ChevronRight, X, CheckCircle2, Sparkles, DollarSign } from 'lucide-react-native';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 

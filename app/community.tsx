@@ -36,6 +36,26 @@ const Community = () => {
       comments: 56,
       timeAgo: '1 day ago',
     },
+    {
+      id: '4',
+      user: 'David Bowie',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100',
+      content: 'Any tips for training a parrot? Ziggy is a bit too loud in the mornings! 🦜',
+      image: 'https://images.unsplash.com/photo-1522850949506-32f65ea53fc9?auto=format&fit=crop&q=80&w=400',
+      likes: 18,
+      comments: 15,
+      timeAgo: '12h ago'
+    },
+    {
+      id: '5',
+      user: 'Elena Gilbert',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
+      content: 'Rex finally learned "Roll Over"! So proud of my smart boy. 🐕🦴',
+      image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&q=80&w=400',
+      likes: 56,
+      comments: 12,
+      timeAgo: '1 day ago'
+    }
   ];
 
   return (

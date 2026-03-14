@@ -2,19 +2,21 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { Link } from 'expo-router';
-import { Calendar, Bell, ShieldAlert, Stethoscope, Heart, Users, MapPin, ShoppingBag, Scissors, ChevronRight } from 'lucide-react-native';
+import { Calendar, Bell, ShieldAlert, Stethoscope, Heart, Users, MapPin, ShoppingBag, Scissors, ChevronRight, TreePine, GraduationCap } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
 const Home = () => {
   const { user, appointments, pets } = useApp();
 
   const quickActions = [
-    { icon: Stethoscope, label: 'Book Vet', color: '#ccfbf1', iconColor: '#0d9488', href: '/explore' },
-    { icon: Heart, label: 'Adopt', color: '#fef3c7', iconColor: '#d97706', href: '/adoption' },
-    { icon: Users, label: 'Community', color: '#e0e7ff', iconColor: '#4f46e5', href: '/community' },
+    { icon: Stethoscope, label: 'Vets', color: '#ccfbf1', iconColor: '#0d9488', href: '/vets' },
     { icon: ShoppingBag, label: 'Shop', color: '#dbeafe', iconColor: '#2563eb', href: '/marketplace' },
-    { icon: Scissors, label: 'Services', color: '#d1fae5', iconColor: '#059669', href: '/services' },
-    { icon: MapPin, label: 'Lost & Found', color: '#ffe4e6', iconColor: '#e11d48', href: '/explore' },
+    { icon: Scissors, label: 'Grooming', color: '#fef3c7', iconColor: '#d97706', href: '/grooming' },
+    { icon: GraduationCap, label: 'Training', color: '#dcfce7', iconColor: '#16a34a', href: '/training' },
+    { icon: TreePine, label: 'Parks', color: '#e0e7ff', iconColor: '#4f46e5', href: '/parks' },
+    { icon: Users, label: 'Community', color: '#f3e8ff', iconColor: '#9333ea', href: '/community' },
+    { icon: Heart, label: 'Adopt', color: '#fce7f3', iconColor: '#db2777', href: '/adoption' },
+    { icon: MapPin, label: 'Lost/Found', color: '#ffe4e6', iconColor: '#e11d48', href: '/lost-found' },
   ];
 
   const upcomingApp = appointments.find(a => a.status === 'Upcoming');
@@ -91,7 +93,7 @@ const Home = () => {
                 <View style={styles.divider} />
                 <View style={styles.petInfo}>
                   <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=100' }}
+                    source={{ uri: pets.find(p => p.id === upcomingApp.petId)?.image || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=100' }}
                     style={styles.petImage}
                   />
                   <Text style={styles.petName}>For {pets.find(p => p.id === upcomingApp.petId)?.name || 'your pet'}</Text>
@@ -126,9 +128,11 @@ const Home = () => {
               <Text style={styles.alertTitle}>Vaccination Due</Text>
               <Text style={styles.alertSubtitle}>Rabies shot for Bella is due in 3 days.</Text>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.detailsBtn}>Details</Text>
-            </TouchableOpacity>
+            <Link href="/notifications" asChild>
+              <TouchableOpacity>
+                <Text style={styles.detailsBtn}>Details</Text>
+              </TouchableOpacity>
+            </Link>
           </View>
         </View>
 
@@ -141,26 +145,30 @@ const Home = () => {
             </Link>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-            <View style={styles.productCard}>
-              <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200' }}
-                style={styles.productImage}
-              />
-              <View style={styles.productInfo}>
-                <Text style={styles.productName} numberOfLines={1}>Premium Puppy Food</Text>
-                <Text style={styles.productPrice}>$45.99</Text>
-              </View>
-            </View>
-            <View style={styles.productCard}>
-              <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=200' }}
-                style={styles.productImage}
-              />
-              <View style={styles.productInfo}>
-                <Text style={styles.productName} numberOfLines={1}>Orthopedic Dog Bed</Text>
-                <Text style={styles.productPrice}>$89.00</Text>
-              </View>
-            </View>
+            <Link href="/marketplace" asChild>
+              <TouchableOpacity style={styles.productCard}>
+                <Image 
+                  source={{ uri: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200' }}
+                  style={styles.productImage}
+                />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName} numberOfLines={1}>Premium Puppy Food</Text>
+                  <Text style={styles.productPrice}>$45.99</Text>
+                </View>
+              </TouchableOpacity>
+            </Link>
+            <Link href="/marketplace" asChild>
+              <TouchableOpacity style={styles.productCard}>
+                <Image 
+                  source={{ uri: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=200' }}
+                  style={styles.productImage}
+                />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName} numberOfLines={1}>Orthopedic Dog Bed</Text>
+                  <Text style={styles.productPrice}>$89.00</Text>
+                </View>
+              </TouchableOpacity>
+            </Link>
           </ScrollView>
         </View>
 

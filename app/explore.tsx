@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
-import { Link } from 'expo-router';
-import { Search, MapPin, Star, Phone, Clock } from 'lucide-react-native';
+import { useLocalSearchParams, useRouter, Link } from 'expo-router';
+import { Search, MapPin, Star, Phone, Clock, AlertCircle } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
 const Explore = () => {
+  const router = useRouter();
+  const { filter: initialFilter } = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState(initialFilter === 'lost' ? 'Lost & Found' : 'Nearby Services');
 
   const categories = [
     { id: '1', name: 'Vet Clinics', icon: '🏥', color: '#fee2e2' },
@@ -39,14 +42,35 @@ const Explore = () => {
     },
     {
       id: '3',
-      name: 'Paws & Bubbles Grooming',
-      type: 'Grooming',
-      distance: '1.5 km',
-      rating: 4.8,
-      reviews: 89,
-      image: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=200',
-      openNow: false,
-    },
+      name: 'Paws & Claws Dental',
+      type: 'Dentistry',
+      distance: '2.1 km',
+      rating: 4.6,
+      reviews: 45,
+      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=200',
+      openNow: true,
+    }
+  ];
+
+  const lostPets = [
+      {
+          id: 'l1',
+          name: 'Buddy',
+          type: 'Golden Retriever',
+          lastSeen: 'Prospect Park, Brooklyn',
+          status: 'Lost',
+          time: '2 hours ago',
+          image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200'
+      },
+      {
+          id: 'l2',
+          name: 'Mittens',
+          type: 'Calico Cat',
+          lastSeen: '7th Ave, Manhattan',
+          status: 'Found',
+          time: '1 day ago',
+          image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=200'
+      }
   ];
 
   return (
@@ -58,64 +82,123 @@ const Explore = () => {
           <Text style={styles.subtitle}>Discover pet services near you</Text>
         </View>
 
+        {/* Tab Switcher */}
+        <View style={styles.tabContainer}>
+            <TouchableOpacity 
+                onPress={() => setActiveTab('Nearby Services')}
+                style={[styles.tab, activeTab === 'Nearby Services' && styles.activeTab]}
+            >
+                <Text style={[styles.tabText, activeTab === 'Nearby Services' && styles.activeTabText]}>Services</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                onPress={() => setActiveTab('Lost & Found')}
+                style={[styles.tab, activeTab === 'Lost & Found' && styles.activeTab]}
+            >
+                <Text style={[styles.tabText, activeTab === 'Lost & Found' && styles.activeTabText]}>Lost & Found</Text>
+            </TouchableOpacity>
+        </View>
+
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Search size={20} color="#64748b" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search for vets, shops, grooming..."
+            placeholder={activeTab === 'Lost & Found' ? "Search lost pets..." : "Search for vets, shops, grooming..."}
             placeholderTextColor="#94a3b8"
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
 
-        {/* Categories */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {categories.map((category) => (
-              <TouchableOpacity key={category.id} style={[styles.categoryCard, { backgroundColor: category.color }]}>
-                <Text style={styles.categoryIcon}>{category.icon}</Text>
-                <Text style={styles.categoryName}>{category.name}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Nearby Places */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Nearby Places</Text>
-          {nearbyPlaces.map((place) => (
-            <TouchableOpacity key={place.id} style={styles.placeCard}>
-              <Image source={{ uri: place.image }} style={styles.placeImage} />
-              <View style={styles.placeContent}>
-                <View style={styles.placeHeader}>
-                  <Text style={styles.placeName}>{place.name}</Text>
-                  <View style={styles.ratingBadge}>
-                    <Star size={12} color="#fbbf24" fill="#fbbf24" />
-                    <Text style={styles.ratingText}>{place.rating}</Text>
-                    <Text style={styles.reviewsText}>({place.reviews})</Text>
-                  </View>
+        {activeTab === 'Nearby Services' ? (
+            <>
+                {/* Categories */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Categories</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {categories.map((category) => {
+                            const routeMap: Record<string, string> = {
+                                'Vet Clinics': '/vets',
+                                'Pet Shops': '/marketplace',
+                                'Grooming': '/grooming',
+                                'Training': '/training',
+                                'Parks': '/parks',
+                                'Hotels': '/services'
+                            };
+                            return (
+                                <Link key={category.id} href={routeMap[category.name] as any} asChild>
+                                    <TouchableOpacity style={[styles.categoryCard, { backgroundColor: category.color }]}>
+                                        <Text style={styles.categoryIcon}>{category.icon}</Text>
+                                        <Text style={styles.categoryName}>{category.name}</Text>
+                                    </TouchableOpacity>
+                                </Link>
+                            );
+                        })}
+                    </ScrollView>
                 </View>
-                <Text style={styles.placeType}>{place.type}</Text>
-                <View style={styles.placeFooter}>
-                  <View style={styles.distanceRow}>
-                    <MapPin size={14} color="#64748b" />
-                    <Text style={styles.distanceText}>{place.distance}</Text>
-                  </View>
-                  <View style={styles.statusBadge}>
-                    <Clock size={12} color={place.openNow ? '#22c55e' : '#ef4444'} />
-                    <Text style={[styles.statusText, { color: place.openNow ? '#22c55e' : '#ef4444' }]}>
-                      {place.openNow ? 'Open Now' : 'Closed'}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
 
+                {/* Nearby Places */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Nearby Places</Text>
+                    {nearbyPlaces.map((place) => (
+                        <Link key={place.id} href="/vets" asChild>
+                            <TouchableOpacity style={styles.placeCard}>
+                                <Image source={{ uri: place.image }} style={styles.placeImage} />
+                                <View style={styles.placeContent}>
+                                    <View style={styles.placeHeader}>
+                                        <Text style={styles.placeName}>{place.name}</Text>
+                                        <View style={styles.ratingBadge}>
+                                            <Star size={12} color="#fbbf24" fill="#fbbf24" />
+                                            <Text style={styles.ratingText}>{place.rating}</Text>
+                                        </View>
+                                    </View>
+                                    <Text style={styles.placeType}>{place.type}</Text>
+                                    <View style={styles.placeFooter}>
+                                        <View style={styles.distanceRow}>
+                                            <MapPin size={14} color="#64748b" />
+                                            <Text style={styles.distanceText}>{place.distance}</Text>
+                                        </View>
+                                        <View style={styles.statusBadge}>
+                                            <Clock size={12} color={place.openNow ? '#22c55e' : '#ef4444'} />
+                                            <Text style={[styles.statusText, { color: place.openNow ? '#22c55e' : '#ef4444' }]}>
+                                                {place.openNow ? 'Open Now' : 'Closed'}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </Link>
+                    ))}
+                </View>
+            </>
+        ) : (
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Lost & Found Reports</Text>
+                {lostPets.map((pet) => (
+                    <TouchableOpacity key={pet.id} style={styles.placeCard}>
+                        <Image source={{ uri: pet.image }} style={styles.placeImage} />
+                        <View style={styles.placeContent}>
+                            <View style={styles.placeHeader}>
+                                <Text style={styles.placeName}>{pet.name}</Text>
+                                <View style={[styles.statusTag, { backgroundColor: pet.status === 'Lost' ? '#fee2e2' : '#dcfce7' }]}>
+                                    <Text style={[styles.statusTagText, { color: pet.status === 'Lost' ? '#ef4444' : '#22c55e' }]}>{pet.status}</Text>
+                                </View>
+                            </View>
+                            <Text style={styles.placeType}>{pet.type}</Text>
+                            <View style={styles.locationRow}>
+                                <MapPin size={14} color="#94a3b8" />
+                                <Text style={styles.distanceText}>{pet.lastSeen}</Text>
+                            </View>
+                            <Text style={styles.timeAgo}>{pet.time}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+                <TouchableOpacity style={styles.reportBtn} onPress={() => router.push('/lost-found')}>
+                    <AlertCircle size={20} color="#ffffff" />
+                    <Text style={styles.reportBtnText}>Go to Lost & Found Page</Text>
+                </TouchableOpacity>
+            </View>
+        )}
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomTab />
@@ -134,6 +217,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 20,
+    marginTop: 40,
   },
   title: {
     fontSize: 28,
@@ -243,11 +327,6 @@ const styles = StyleSheet.create({
     color: '#92400e',
     marginLeft: 4,
   },
-  reviewsText: {
-    fontSize: 10,
-    color: '#92400e',
-    marginLeft: 2,
-  },
   placeType: {
     fontSize: 13,
     color: '#64748b',
@@ -276,6 +355,70 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  tabContainer: {
+      flexDirection: 'row',
+      backgroundColor: '#f1f5f9',
+      padding: 4,
+      borderRadius: 12,
+      marginBottom: 20,
+  },
+  tab: {
+      flex: 1,
+      paddingVertical: 10,
+      alignItems: 'center',
+      borderRadius: 8,
+  },
+  activeTab: {
+      backgroundColor: '#ffffff',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+  },
+  tabText: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#64748b',
+  },
+  activeTabText: {
+      color: '#0f172a',
+  },
+  statusTag: {
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 8,
+  },
+  statusTagText: {
+      fontSize: 10,
+      fontWeight: 'bold',
+  },
+  locationRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      marginTop: 4,
+  },
+  timeAgo: {
+      fontSize: 10,
+      color: '#94a3b8',
+      marginTop: 8,
+  },
+  reportBtn: {
+      backgroundColor: '#f43f5e',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 16,
+      borderRadius: 16,
+      marginTop: 20,
+  },
+  reportBtnText: {
+      color: '#ffffff',
+      fontWeight: 'bold',
+      fontSize: 16,
+  }
 });
 
 export default Explore;

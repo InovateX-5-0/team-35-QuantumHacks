@@ -16,12 +16,12 @@ const BottomTab = () => {
   return (
     <View style={styles.container}>
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href;
+        const isActive = pathname === tab.href || (tab.href !== '/' && pathname.startsWith(tab.href));
         return (
           <Link key={tab.href} href={tab.href} asChild>
             <TouchableOpacity style={styles.tab} activeOpacity={0.7}>
               <tab.icon 
-                size={24} 
+                size={22} 
                 color={isActive ? '#48d877' : '#94a3b8'} 
                 strokeWidth={isActive ? 2.5 : 2}
               />

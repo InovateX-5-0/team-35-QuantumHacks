@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
 import { User, Mail, Phone, MapPin, Settings, Bell, Shield, HelpCircle, LogOut, ChevronRight } from 'lucide-react-native';
@@ -15,7 +16,7 @@ const Profile = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -90,7 +91,7 @@ const Profile = () => {
         <View style={{ height: 40 }} />
       </ScrollView>
       <BottomTab />
-    </View>
+    </SafeAreaView>
   );
 };
 

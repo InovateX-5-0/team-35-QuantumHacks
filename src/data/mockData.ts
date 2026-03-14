@@ -28,6 +28,26 @@ export const MOCK_CLINICS = [
     hours: '09:00 - 18:00',
     contact: '+1 555 000 111',
     image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
+  },
+  {
+    id: '4',
+    name: 'Paws & Claws Dental',
+    rating: 4.7,
+    distance: '4.5 km',
+    specialization: 'Pet Dentistry',
+    hours: '08:30 - 17:30',
+    contact: '+1 555 123 456',
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=400',
+  },
+  {
+    id: '5',
+    name: 'Exotic Pet Haven',
+    rating: 4.6,
+    distance: '5.2 km',
+    specialization: 'Birds, Reptiles, Rabbits',
+    hours: '10:00 - 19:00',
+    contact: '+1 555 789 012',
+    image: 'https://images.unsplash.com/photo-1522850949506-32f65ea53fc9?auto=format&fit=crop&q=80&w=400',
   }
 ];
 
@@ -54,13 +74,43 @@ export const MOCK_ADOPTION_PETS = [
     breed: 'Tabby',
     age: '6 months',
     location: 'Queens, NY',
-    image: 'https://images.unsplash.com/photo-1573865668131-974279df4a94?auto=format&fit=crop&q=80&w=400',
+    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
     shelter: 'Happy Whiskers Shelter',
     description: 'Oliver is a playful kitten who loves to cuddle and play with yarn.',
     adoptionFee: 100,
     personality: 'Playful, Curious, Cuddly',
     energy: 'Medium',
     health: 'Dewormed, Vaccinated'
+  },
+  {
+    id: 'a3',
+    name: 'Bella',
+    species: 'Dog',
+    breed: 'Beagle',
+    age: '1 year',
+    location: 'Manhattan, NY',
+    image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400',
+    shelter: 'Manhattan Pet Rescue',
+    description: 'Bella is a sweet Beagle who loves long walks and sniffing out new adventures.',
+    adoptionFee: 200,
+    personality: 'Sweet, Curious, Energetic',
+    energy: 'High',
+    health: 'Healthy, Vaccinated'
+  },
+  {
+    id: 'a4',
+    name: 'Mochi',
+    species: 'Cat',
+    breed: 'Sippese',
+    age: '3 years',
+    location: 'Staten Island, NY',
+    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400',
+    shelter: 'Island Cat Rescue',
+    description: 'Mochi is a calm and affectionate Siamese cat who enjoys quiet afternoons.',
+    adoptionFee: 80,
+    personality: 'Calm, Affectionate, Quiet',
+    energy: 'Low',
+    health: 'Vaccinated'
   }
 ];
 
@@ -86,6 +136,67 @@ export const MOCK_POSTS = [
     likes: 42,
     comments: 8,
     time: '5h ago'
+  },
+  {
+    id: 'p3',
+    author: 'Elena Gilbert',
+    authorImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
+    petName: 'Rex',
+    content: 'Rex finally learned "Roll Over"! So proud of my smart boy. 🐕🦴',
+    image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&q=80&w=400',
+    likes: 56,
+    comments: 12,
+    time: '8h ago'
+  },
+  {
+    id: 'p4',
+    author: 'David Bowie',
+    authorImage: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100',
+    petName: 'Ziggy',
+    content: 'Any tips for training a parrot? Ziggy is a bit too loud in the mornings! 🦜',
+    image: 'https://images.unsplash.com/photo-1522850949506-32f65ea53fc9?auto=format&fit=crop&q=80&w=400',
+    likes: 18,
+    comments: 15,
+    time: '12h ago'
+  }
+];
+
+export const MOCK_PRODUCTS = [
+  {
+    id: 'prd1',
+    name: 'Premium Puppy Food',
+    price: 45.99,
+    category: 'Food',
+    rating: 4.8,
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=400',
+    description: 'High-protein puppy food for healthy growth.'
+  },
+  {
+    id: 'prd2',
+    name: 'Orthopedic Dog Bed',
+    price: 89.00,
+    category: 'Accessories',
+    rating: 4.9,
+    image: 'https://images.unsplash.com/photo-1591768793355-74d7c836038c?auto=format&fit=crop&q=80&w=400',
+    description: 'Slow-recovery memory foam for ultimate comfort.'
+  },
+  {
+    id: 'prd3',
+    name: 'Interactive Cat Laser',
+    price: 15.50,
+    category: 'Toys',
+    rating: 4.5,
+    image: 'https://images.unsplash.com/photo-1513245535761-07747efbd661?auto=format&fit=crop&q=80&w=400',
+    description: 'Keeps your cat active and entertained for hours.'
+  },
+  {
+    id: 'prd4',
+    name: 'Automatic Pet Feeder',
+    price: 120.00,
+    category: 'Tech',
+    rating: 4.7,
+    image: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&q=80&w=400',
+    description: 'Schedule meals even when you are away.'
   }
 ];
 

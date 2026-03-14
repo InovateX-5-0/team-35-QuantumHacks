@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp, Pet } from '../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, FileText, Activity, ChevronRight, Camera, X, Check } from 'lucide-react';
+import { Plus, FileText, Activity, ChevronRight, Camera, X, Check } from 'lucide-react-native';
 
 const Pets: React.FC = () => {
   const { pets, addPet, addVaccination, addMedicalRecord } = useApp();

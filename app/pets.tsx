@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import BottomTab from '../components/Navigation';
 import { Plus, Calendar, Syringe } from 'lucide-react-native';
@@ -8,7 +9,7 @@ const Pets = () => {
   const { pets, appointments } = useApp();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -69,7 +70,7 @@ const Pets = () => {
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomTab />
-    </View>
+    </SafeAreaView>
   );
 };
 
