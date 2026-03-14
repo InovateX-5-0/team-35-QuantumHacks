@@ -105,6 +105,89 @@ export function ParkDirectory() {
           </div>
         </div>
       </div>
+      </div>
+
+      {isModalOpen && (
+         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+             <div className="flex justify-between items-center mb-6">
+               <h2 className="text-xl font-bold text-slate-800">Add New Park</h2>
+               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                 <X size={24} />
+               </button>
+             </div>
+             
+             <form onSubmit={handleAddPark} className="space-y-4">
+               <div>
+                 <label className="block text-sm font-semibold text-slate-700 mb-1">Park Name</label>
+                 <input 
+                   required
+                   type="text" 
+                   value={newPark.name}
+                   onChange={(e) => setNewPark({...newPark, name: (e.target as HTMLInputElement).value})}
+                   placeholder="e.g. Central Pet Plaza"
+                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                 />
+               </div>
+               
+               <div>
+                 <label className="block text-sm font-semibold text-slate-700 mb-1">Location Address</label>
+                 <input 
+                   required
+                   type="text" 
+                   value={newPark.location}
+                   onChange={(e) => setNewPark({...newPark, location: (e.target as HTMLInputElement).value})}
+                   placeholder="e.g. 123 Bark Avenue"
+                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                 />
+               </div>
+               
+               <div className="grid grid-cols-2 gap-4">
+                 <div>
+                   <label className="block text-sm font-semibold text-slate-700 mb-1">Status</label>
+                   <select 
+                     value={newPark.status}
+                     onChange={(e) => setNewPark({...newPark, status: (e.target as HTMLSelectElement).value})}
+                     className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white"
+                   >
+                     <option value="Open">Open</option>
+                     <option value="Closed">Closed</option>
+                     <option value="Maintenance">Maintenance</option>
+                   </select>
+                 </div>
+                 <div>
+                   <label className="block text-sm font-semibold text-slate-700 mb-1">Type Area</label>
+                   <select 
+                     value={newPark.type}
+                     onChange={(e) => setNewPark({...newPark, type: (e.target as HTMLSelectElement).value})}
+                     className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white"
+                   >
+                     <option value="Dog">Dog</option>
+                     <option value="Cat">Cat</option>
+                     <option value="Mixed">Mixed</option>
+                   </select>
+                 </div>
+               </div>
+               
+               <div className="pt-4 flex gap-3">
+                 <button 
+                   type="button" 
+                   onClick={() => setIsModalOpen(false)}
+                   className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-colors"
+                 >
+                   Cancel
+                 </button>
+                 <button 
+                   type="submit"
+                   className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
+                 >
+                   Add Park
+                 </button>
+               </div>
+             </form>
+           </div>
+         </div>
+       )}
     </div>
   );
 }
