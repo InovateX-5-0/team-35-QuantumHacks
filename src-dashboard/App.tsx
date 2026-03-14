@@ -20,6 +20,22 @@ import { StoreOverview } from './pages/store/StoreOverview';
 import { Inventory } from './pages/store/Inventory';
 import { Orders } from './pages/store/Orders';
 
+// Grooming Pages
+import { GroomingOverview } from './pages/grooming/GroomingOverview';
+import { GroomingAppointments } from './pages/grooming/GroomingAppointments';
+import { GroomingServices } from './pages/grooming/GroomingServices';
+
+// Training Pages
+import { TrainingOverview } from './pages/training/TrainingOverview';
+import { TrainingClasses } from './pages/training/TrainingClasses';
+import { TrainerManagement } from './pages/training/TrainerManagement';
+
+// Parks Pages
+import { ParksOverview } from './pages/parks/ParksOverview';
+import { VisitorTraffic } from './pages/parks/VisitorTraffic';
+import { ParkAlerts } from './pages/parks/ParkAlerts';
+import { ParkDirectory } from './pages/parks/ParkDirectory';
+
 // Placeholder Pages
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
@@ -75,27 +91,28 @@ function AppContent() {
         {/* Grooming Routes */}
         {role === 'grooming' && (
           <>
-            <Route path="/overview" element={<PlaceholderPage title="Grooming Overview" />} />
-            <Route path="/appointments" element={<PlaceholderPage title="Grooming Appointments" />} />
-            <Route path="/services" element={<PlaceholderPage title="Grooming Services" />} />
+            <Route path="/overview" element={<GroomingOverview />} />
+            <Route path="/appointments" element={<GroomingAppointments />} />
+            <Route path="/services" element={<GroomingServices />} />
           </>
         )}
 
         {/* Training Routes */}
         {role === 'training' && (
           <>
-            <Route path="/overview" element={<PlaceholderPage title="Training Overview" />} />
-            <Route path="/classes" element={<PlaceholderPage title="Training Classes" />} />
-            <Route path="/trainers" element={<PlaceholderPage title="Trainer Management" />} />
+            <Route path="/overview" element={<TrainingOverview />} />
+            <Route path="/classes" element={<TrainingClasses />} />
+            <Route path="/trainers" element={<TrainerManagement />} />
           </>
         )}
 
         {/* Parks Routes */}
         {role === 'parks' && (
           <>
-            <Route path="/overview" element={<PlaceholderPage title="Parks Overview" />} />
-            <Route path="/visitors" element={<PlaceholderPage title="Visitor Traffic" />} />
-            <Route path="/alerts" element={<PlaceholderPage title="Park Alerts" />} />
+            <Route path="/overview" element={<ParksOverview />} />
+            <Route path="/visitors" element={<VisitorTraffic />} />
+            <Route path="/alerts" element={<ParkAlerts />} />
+            <Route path="/directory" element={<ParkDirectory />} />
           </>
         )}
 

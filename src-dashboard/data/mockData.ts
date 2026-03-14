@@ -121,5 +121,104 @@ export const mockData = {
       { id: 'ORD-7718', customer: 'Frank Miller', items: 2, total: 44.98, status: 'processing' },
       { id: 'ORD-7717', customer: 'Grace Lee', items: 1, total: 65.00, status: 'delivered' },
     ]
+  },
+  grooming: {
+    stats: {
+      todayGrooms: 8,
+      pendingAppointments: 15,
+      revenueToday: 1240,
+      activeGroomers: 3,
+    },
+    serviceVolume: [
+      { date: 'Mon', count: 12 },
+      { date: 'Tue', count: 15 },
+      { date: 'Wed', count: 11 },
+      { date: 'Thu', count: 18 },
+      { date: 'Fri', count: 22 },
+      { date: 'Sat', count: 30 },
+      { date: 'Sun', count: 10 },
+    ],
+    serviceTypes: [
+      { name: 'Full Groom', value: 50 },
+      { name: 'Wash & Dry', value: 30 },
+      { name: 'Nail Trim', value: 15 },
+      { name: 'Spa Deluxe', value: 5 },
+    ],
+    appointments: [
+      { id: 'G1', petName: 'Cooper', owner: 'Emma Wilson', time: '09:00 AM', type: 'Full Groom', status: 'confirmed' },
+      { id: 'G2', petName: 'Daisy', owner: 'Robert Jones', time: '10:30 AM', type: 'Wash & Dry', status: 'pending' },
+      { id: 'G3', petName: 'Rocky', owner: 'Sarah Smith', time: '01:00 PM', type: 'Full Groom', status: 'confirmed' },
+    ],
+    services: [
+      { id: 'S1', name: 'Full Groom', price: 65, duration: '90 min' },
+      { id: 'S2', name: 'Wash & Dry', price: 35, duration: '45 min' },
+      { id: 'S3', name: 'Spa Deluxe', price: 95, duration: '120 min' },
+    ]
+  },
+  training: {
+    stats: {
+      activeClasses: 6,
+      totalStudents: 42,
+      successRate: 98,
+      trainers: 4,
+    },
+    enrollmentStats: [
+      { month: 'Jan', students: 20 },
+      { month: 'Feb', students: 25 },
+      { month: 'Mar', students: 30 },
+      { month: 'Apr', students: 42 },
+    ],
+    classTypes: [
+      { name: 'Obedience', value: 40 },
+      { name: 'Agility', value: 25 },
+      { name: 'Puppy Social', value: 20 },
+      { name: 'Advanced Tricks', value: 15 },
+    ],
+    classes: [
+      { id: 'C1', name: 'Basic Obedience', trainer: 'John Mike', time: '10:00 AM', status: 'active' },
+      { id: 'C2', name: 'Agility Pro', trainer: 'Sarah Lane', time: '02:00 PM', status: 'active' },
+    ],
+    trainers: [
+      { id: 'T1', name: 'John Mike', specialty: 'Behavior', experience: '8 yrs' },
+      { id: 'T2', name: 'Sarah Lane', specialty: 'Agility', experience: '5 yrs' },
+    ]
+  },
+  parks: {
+    stats: {
+      totalVisitors: 125,
+      currentOccupancy: 22,
+      cleanliness: 95,
+      activeAlerts: 0,
+    },
+    trafficStats: [
+      { time: '8am', visitors: 5 },
+      { time: '10am', visitors: 15 },
+      { time: '12pm', visitors: 10 },
+      { time: '2pm', visitors: 25 },
+      { time: '4pm', visitors: 45 },
+      { time: '6pm', visitors: 30 },
+    ],
+    capacityUsage: [
+      { name: 'Used', value: 22 },
+      { name: 'Available', value: 78 },
+    ],
+    visitors: [
+      { id: 'V1', petName: 'Toby', checkIn: '10:15 AM', duration: '45 min' },
+      { id: 'V2', petName: 'Buster', checkIn: '10:30 AM', duration: '30 min' },
+    ],
+    alerts: [
+      { id: 'A1', type: 'Weather', message: 'Heavy rain expected this afternoon.', status: 'active' },
+      { id: 'A2', type: 'Maintenance', message: 'Main gate repairs at 2 PM.', status: 'upcoming' },
+    ],
+    directory: [
+      { id: 'P1', name: 'Central Bark Park', location: '123 Meadow Lane, Downtown', rating: 4.8, type: 'Off-leash', status: 'Open' },
+      { id: 'P2', name: 'Riverside Pet Haven', location: '45 River Road, North Side', rating: 4.5, type: 'Fenced', status: 'Closed (Rain)' },
+      { id: 'P3', name: 'Sunny Hills Run', location: '88 Hilltop Ave, West End', rating: 4.9, type: 'Wooded', status: 'Open' },
+    ],
+    reviews: [
+      { id: 'R1', user: 'Mark S.', park: 'Central Bark Park', rating: 5, comment: 'Very clean and spacious. My dog loved the agility equipment!' },
+      { id: 'R2', user: 'Linda K.', park: 'Riverside Pet Haven', rating: 4, comment: 'Great view of the river, but can get a bit muddy after rain.' },
+      { id: 'R3', user: 'Tom H.', park: 'Central Bark Park', rating: 5, comment: 'The water station is a lifesaver. Highly recommend!' },
+    ]
   }
 };

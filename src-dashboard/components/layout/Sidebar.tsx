@@ -2,7 +2,8 @@ import React from 'react';
 import { useRole } from '../../context/RoleContext';
 import { 
   X, LayoutDashboard, CalendarDays, Users, Clock, Settings,
-  PawPrint, FileText, Activity, Package, AlertTriangle, ShoppingCart, BarChart3
+  PawPrint, FileText, Activity, Package, AlertTriangle, ShoppingCart, BarChart3,
+  Scissors, GraduationCap, TreePine, MapPin, MessageSquare
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -40,6 +41,25 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           { name: 'Orders', icon: ShoppingCart, path: '/orders' },
           { name: 'Analytics', icon: BarChart3, path: '/analytics' },
         ];
+      case 'grooming':
+        return [
+          { name: 'Overview', icon: LayoutDashboard, path: '/overview' },
+          { name: 'Appointments', icon: CalendarDays, path: '/appointments' },
+          { name: 'Services', icon: Scissors, path: '/services' },
+        ];
+      case 'training':
+        return [
+          { name: 'Overview', icon: LayoutDashboard, path: '/overview' },
+          { name: 'Classes', icon: GraduationCap, path: '/classes' },
+          { name: 'Trainers', icon: Users, path: '/trainers' },
+        ];
+      case 'parks':
+        return [
+          { name: 'Overview', icon: LayoutDashboard, path: '/overview' },
+          { name: 'Visitor Traffic', icon: Activity, path: '/visitors' },
+          { name: 'Park Directory', icon: MapPin, path: '/directory' },
+          { name: 'Park Alerts', icon: AlertTriangle, path: '/alerts' },
+        ];
       default:
         return [];
     }
@@ -48,9 +68,12 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const navItems = getNavItems();
 
   const roleDetails = {
-    vet: { title: 'Veterinary Clinic', color: 'text-teal-600', bg: 'bg-teal-50' },
-    shelter: { title: 'Animal Shelter', color: 'text-blue-600', bg: 'bg-blue-50' },
-    store: { title: 'Pet Store', color: 'text-purple-600', bg: 'bg-purple-50' }
+    vet: { title: 'Veterinary Clinic', color: 'text-teal-600', bg: 'bg-teal-50', primary: 'text-teal-600', activeBg: 'bg-teal-50' },
+    shelter: { title: 'Animal Shelter', color: 'text-blue-600', bg: 'bg-blue-50', primary: 'text-blue-600', activeBg: 'bg-blue-50' },
+    store: { title: 'Pet Store', color: 'text-purple-600', bg: 'bg-purple-50', primary: 'text-purple-600', activeBg: 'bg-purple-50' },
+    grooming: { title: 'Grooming Spa', color: 'text-pink-600', bg: 'bg-pink-50', primary: 'text-pink-600', activeBg: 'bg-pink-50' },
+    training: { title: 'Training Center', color: 'text-orange-600', bg: 'bg-orange-50', primary: 'text-orange-600', activeBg: 'bg-orange-50' },
+    parks: { title: 'Pet Park', color: 'text-emerald-600', bg: 'bg-emerald-50', primary: 'text-emerald-600', activeBg: 'bg-emerald-50' }
   };
 
   const currentRoleInfo = role ? roleDetails[role] : null;
@@ -108,11 +131,11 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                   isActive 
-                    ? 'bg-teal-50 text-primary' 
+                    ? `${currentRoleInfo?.activeBg} ${currentRoleInfo?.primary}` 
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Icon size={18} className={isActive ? 'text-primary' : 'text-slate-400'} />
+                <Icon size={18} className={isActive ? currentRoleInfo?.primary : 'text-slate-400'} />
                 {item.name}
               </Link>
             );
