@@ -1,70 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
-import { useRouter, Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Search, MapPin, Star, Clock, AlertCircle } from 'lucide-react-native';
 import BottomTab from '../components/Navigation';
 
-const categories = [
-  { id: '1', name: 'Vet Clinics', icon: '🏥', color: '#fee2e2', route: '/vets' },
-  { id: '2', name: 'Pet Shops', icon: '🛍️', color: '#dbeafe', route: '/marketplace' },
-  { id: '3', name: 'Grooming', icon: '✂️', color: '#fef3c7', route: '/grooming' },
-  { id: '4', name: 'Training', icon: '🎓', color: '#d1fae5', route: '/training' },
-  { id: '5', name: 'Parks', icon: '🌳', color: '#e0e7ff', route: '/parks' },
-  { id: '6', name: 'Hotels', icon: '🏨', color: '#fce7f3', route: '/services' },
+// Comprehensive mock data for global search
+const ALL_SERVICES = [
+  { id: 's1', name: 'Happy Paws Vet Clinic', type: 'Veterinary', distance: '0.8 km', rating: 4.9, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/vets' },
+  { id: 's2', name: 'City Pet Hospital', type: 'Veterinary / Emergency', distance: '2.5 km', rating: 4.5, image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/vets' },
+  { id: 's3', name: 'PetSmart Store', type: 'Pet Shop / Food', distance: '1.2 km', rating: 4.7, image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/marketplace' },
+  { id: 's4', name: 'Paws & Claws Dental', type: 'Dentistry', distance: '2.1 km', rating: 4.6, image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/vets' },
+  { id: 's5', name: 'Fluffy Cuts Grooming', type: 'Grooming / Spa', distance: '3.0 km', rating: 4.8, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=200', openNow: false, route: '/grooming' },
+  { id: 's6', name: 'Good Boy Academy', type: 'Training / Obedience', distance: '4.5 km', rating: 4.9, image: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/training' },
+  { id: 's7', name: 'Central Bark Park', type: 'Park / Outdoors', distance: '1.5 km', rating: 4.8, image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/parks' },
+  { id: 's8', name: 'Luxury Pet Resort', type: 'Hotel / Boarding', distance: '5.2 km', rating: 4.7, image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=200', openNow: true, route: '/services' },
 ];
 
-const nearbyPlaces = [
-  {
-    id: '1',
-    name: 'Happy Paws Vet Clinic',
-    type: 'Veterinary',
-    distance: '0.8 km',
-    rating: 4.9,
-    reviews: 128,
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200',
-    openNow: true,
-  },
-  {
-    id: '2',
-    name: 'PetSmart Store',
-    type: 'Pet Shop',
-    distance: '1.2 km',
-    rating: 4.7,
-    reviews: 256,
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=200',
-    openNow: true,
-  },
-  {
-    id: '3',
-    name: 'Paws & Claws Dental',
-    type: 'Dentistry',
-    distance: '2.1 km',
-    rating: 4.6,
-    reviews: 45,
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=200',
-    openNow: true,
-  }
-];
-
-const lostPets = [
-  {
-    id: 'l1',
-    name: 'Buddy',
-    type: 'Golden Retriever',
-    lastSeen: 'Prospect Park, Brooklyn',
-    status: 'Lost',
-    time: '2 hours ago',
-    image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 'l2',
-    name: 'Mittens',
-    type: 'Calico Cat',
-    lastSeen: '7th Ave, Manhattan',
-    status: 'Found',
-    time: '1 day ago',
-    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=200'
-  }
+const LOST_PETS = [
+  { id: 'l1', name: 'Buddy', type: 'Golden Retriever', lastSeen: 'Prospect Park, Brooklyn', status: 'Lost', time: '2 hours ago', image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200' },
+  { id: 'l2', name: 'Mittens', type: 'Calico Cat', lastSeen: '7th Ave, Manhattan', status: 'Found', time: '1 day ago', image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=200' }
 ];
 
 export default function Explore() {
@@ -72,21 +26,56 @@ export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('services');
 
-  console.log('[DEBUG] Explore page rendering, activeTab:', activeTab);
+  // Global Search Logic using useMemo for performance
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return ALL_SERVICES; // Show all by default
     
-  // Safety check for categories
-  if (!categories || categories.length === 0) {
-      console.error('[DEBUG] categories is empty or undefined');
-      return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading categories...</Text></View>;
-  }
+    const query = searchQuery.toLowerCase();
+    return ALL_SERVICES.filter(service => 
+      service.name.toLowerCase().includes(query) || 
+      service.type.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
+  const lostPetsResults = useMemo(() => {
+    if (!searchQuery.trim()) return LOST_PETS;
+    
+    const query = searchQuery.toLowerCase();
+    return LOST_PETS.filter(pet => 
+      pet.name.toLowerCase().includes(query) || 
+      pet.type.toLowerCase().includes(query) ||
+      pet.lastSeen.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
+  const handleRoute = (route: string) => {
+    try {
+      router.push(route as any);
+    } catch (e) {
+      console.error('Navigation error:', e);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Explore</Text>
-          <Text style={styles.subtitle}>Discover pet services near you</Text>
+          <Text style={styles.title}>Global Search</Text>
+          <Text style={styles.subtitle}>Find anything in PawCare</Text>
+        </View>
+
+        {/* Global Search Bar */}
+        <View style={styles.searchContainer}>
+          <Search size={20} color="#64748b" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder={activeTab === 'lost' ? "Search for lost dogs, cats, locations..." : "Search for vets, shops, grooming, parks..."}
+            placeholderTextColor="#94a3b8"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            autoCapitalize="none"
+          />
         </View>
 
         {/* Tab Switcher */}
@@ -95,7 +84,7 @@ export default function Explore() {
             onPress={() => setActiveTab('services')}
             style={[styles.tab, activeTab === 'services' ? styles.activeTab : null]}
           >
-            <Text style={[styles.tabText, activeTab === 'services' ? styles.activeTabText : null]}>Services</Text>
+            <Text style={[styles.tabText, activeTab === 'services' ? styles.activeTabText : null]}>Services & Places</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('lost')}
@@ -105,48 +94,26 @@ export default function Explore() {
           </TouchableOpacity>
         </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Search size={20} color="#64748b" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder={activeTab === 'lost' ? "Search lost pets..." : "Search for vets, shops, grooming..."}
-            placeholderTextColor="#94a3b8"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-
         {activeTab === 'services' ? (
-          <View>
-            {/* Categories */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Categories</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {categories.map((category) => (
-                  <TouchableOpacity 
-                    key={category.id} 
-                    style={[styles.categoryCard, { backgroundColor: category.color }]}
-                    onPress={() => router.push(category.route as any)}
-                  >
-                    <Text style={styles.categoryIcon}>{category.icon}</Text>
-                    <Text style={styles.categoryName}>{category.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-
-            {/* Nearby Places */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Nearby Places</Text>
-              {nearbyPlaces.map((place) => (
-                <TouchableOpacity key={place.id} style={styles.placeCard} onPress={() => router.push('/vets')}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              {searchQuery ? `Search Results (${searchResults.length})` : 'All Available Services'}
+            </Text>
+            
+            {searchResults.length === 0 ? (
+              <View style={styles.emptyState}>
+                <AlertCircle size={40} color="#94a3b8" />
+                <Text style={styles.emptyText}>No services found matching "{searchQuery}"</Text>
+              </View>
+            ) : (
+              searchResults.map((place) => (
+                <TouchableOpacity key={place.id} style={styles.placeCard} onPress={() => handleRoute(place.route)}>
                   <Image source={{ uri: place.image }} style={styles.placeImage} />
                   <View style={styles.placeContent}>
                     <View style={styles.placeHeader}>
                       <Text style={styles.placeName} numberOfLines={1}>{place.name}</Text>
                       <View style={styles.ratingBadge}>
-                        <Star size={12} color="#fbbf24" />
+                        <Star size={12} color="#fbbf24" fill="#fbbf24" />
                         <Text style={styles.ratingText}>{place.rating}</Text>
                       </View>
                     </View>
@@ -165,34 +132,45 @@ export default function Explore() {
                     </View>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </View>
+              ))
+            )}
           </View>
         ) : (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Lost & Found Reports</Text>
-            {lostPets.map((pet) => (
-              <TouchableOpacity key={pet.id} style={styles.placeCard}>
-                <Image source={{ uri: pet.image }} style={styles.placeImage} />
-                <View style={styles.placeContent}>
-                  <View style={styles.placeHeader}>
-                    <Text style={styles.placeName}>{pet.name}</Text>
-                    <View style={[styles.statusTag, { backgroundColor: pet.status === 'Lost' ? '#fee2e2' : '#dcfce7' }]}>
-                      <Text style={[styles.statusTagText, { color: pet.status === 'Lost' ? '#ef4444' : '#22c55e' }]}>{pet.status}</Text>
+            <Text style={styles.sectionTitle}>
+              {searchQuery ? `Found Reports (${lostPetsResults.length})` : 'Recent Reports'}
+            </Text>
+            
+            {lostPetsResults.length === 0 ? (
+              <View style={styles.emptyState}>
+                <AlertCircle size={40} color="#94a3b8" />
+                <Text style={styles.emptyText}>No missing pets found matching "{searchQuery}"</Text>
+              </View>
+            ) : (
+              lostPetsResults.map((pet) => (
+                <TouchableOpacity key={pet.id} style={styles.placeCard} onPress={() => handleRoute('/lost-found')}>
+                  <Image source={{ uri: pet.image }} style={styles.placeImage} />
+                  <View style={styles.placeContent}>
+                    <View style={styles.placeHeader}>
+                      <Text style={styles.placeName}>{pet.name}</Text>
+                      <View style={[styles.statusTag, { backgroundColor: pet.status === 'Lost' ? '#fee2e2' : '#dcfce7' }]}>
+                        <Text style={[styles.statusTagText, { color: pet.status === 'Lost' ? '#ef4444' : '#22c55e' }]}>{pet.status}</Text>
+                      </View>
                     </View>
+                    <Text style={styles.placeType}>{pet.type}</Text>
+                    <View style={styles.locationRow}>
+                      <MapPin size={14} color="#94a3b8" />
+                      <Text style={styles.distanceText}>{pet.lastSeen}</Text>
+                    </View>
+                    <Text style={styles.timeAgo}>{pet.time}</Text>
                   </View>
-                  <Text style={styles.placeType}>{pet.type}</Text>
-                  <View style={styles.locationRow}>
-                    <MapPin size={14} color="#94a3b8" />
-                    <Text style={styles.distanceText}>{pet.lastSeen}</Text>
-                  </View>
-                  <Text style={styles.timeAgo}>{pet.time}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity style={styles.reportBtn} onPress={() => router.push('/lost-found')}>
+                </TouchableOpacity>
+              ))
+            )}
+            
+            <TouchableOpacity style={styles.reportBtn} onPress={() => handleRoute('/lost-found')}>
               <AlertCircle size={20} color="#ffffff" />
-              <Text style={styles.reportBtnText}>Go to Lost & Found Page</Text>
+              <Text style={styles.reportBtnText}>Report a New Sighting</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -234,17 +212,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    borderWidth: 2,
+    borderColor: '#48d877',
+    shadowColor: '#48d877',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   searchInput: {
     flex: 1,
     marginLeft: 12,
     fontSize: 16,
     color: '#0f172a',
+    fontWeight: '500',
   },
   section: {
     marginBottom: 24,
@@ -255,27 +236,20 @@ const styles = StyleSheet.create({
     color: '#0f172a',
     marginBottom: 16,
   },
-  categoryCard: {
-    width: 90,
-    height: 90,
-    borderRadius: 16,
-    marginRight: 12,
-    justifyContent: 'center',
+  emptyState: {
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    justifyContent: 'center',
+    padding: 40,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: '#cbd5e1',
   },
-  categoryIcon: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  categoryName: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#0f172a',
+  emptyText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#64748b',
     textAlign: 'center',
   },
   placeCard: {
@@ -328,6 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#64748b',
     marginBottom: 8,
+    fontWeight: '500',
   },
   placeFooter: {
     flexDirection: 'row',
@@ -402,7 +377,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   reportBtn: {
-    backgroundColor: '#f43f5e',
+    backgroundColor: '#0f172a',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
